@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Roomly — Solusi Anak Kos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===== APP SHELL ===== -->
+<div class="app">
+
+  <!-- ===== TOP NAV ===== -->
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" data-nav="home" href="#home">
+        <span class="brand-logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><circle cx="12" cy="14" r="3"/></svg>
+        </span>
+        <span class="brand-name">Roomly</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#home" class="nav-link active" data-nav="home">Beranda</a>
+        <a href="#laundry" class="nav-link" data-nav="laundry">Laundry</a>
+        <a href="#cleaning" class="nav-link" data-nav="cleaning">Cleaning</a>
+        <a href="#tracking" class="nav-link" data-nav="tracking">Tracking</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn-ghost">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17h5l-1.4-1.4A2 2 0 0118 14V11a6 6 0 10-12 0v3a2 2 0 01-.6 1.4L4 17h5"/><path d="M9 17a3 3 0 006 0"/></svg>
+        </button>
+        <div class="avatar">SM</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================
+       HOME / DASHBOARD
+       ===================================== -->
+  <main id="page-home" class="page page-active">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <span class="badge">
+            <span class="badge-dot"></span>
+            Layanan terintegrasi untuk anak kos
+          </span>
+          <h1>Hidup kos jadi <span class="text-accent">lebih ringan</span>.</h1>
+          <p class="lead">
+            Pesan laundry, cleaning service, dan pantau pesanan kamu — semuanya dalam satu aplikasi yang dirancang khusus untuk mahasiswa.
+          </p>
+          <div class="hero-cta">
+            <button class="btn-primary" data-nav="laundry">
+              Mulai Pesan
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </button>
+            <button class="btn-secondary" data-nav="tracking">Lihat Pesanan</button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-num">9.500+</div>
+              <div class="stat-label">Mahasiswa terbantu</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <div class="stat-num">120+</div>
+              <div class="stat-label">Mitra terverifikasi</div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+              <div class="stat-num">4.8</div>
+              <div class="stat-label">Rating pengguna</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="card-floating card-tracking">
+            <div class="ft-head">
+              <div>
+                <div class="ft-title">Order #RML-0421</div>
+                <div class="ft-sub">Laundry Express · 3 kg</div>
+              </div>
+              <span class="pill pill-progress">Sedang Dikerjakan</span>
+            </div>
+            <div class="ft-progress">
+              <div class="ft-bar"><div class="ft-bar-fill" style="width:62%"></div></div>
+              <div class="ft-progress-meta">
+                <span>62% selesai</span>
+                <span>Selesai ~ 18.30</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-floating card-quick">
+            <div class="quick-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </div>
+            <div>
+              <div class="quick-title">Pickup hari ini</div>
+              <div class="quick-sub">14.00 — 16.00 WIB</div>
+            </div>
+          </div>
+
+          <div class="hero-blob"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="services">
+      <div class="container">
+        <div class="section-head">
+          <h2>Pilih layanan kamu</h2>
+          <p>Tiga fitur utama untuk membuat hidup kos jadi lebih praktis.</p>
+        </div>
+        <div class="service-grid">
+
+          <a class="service-card" data-nav="laundry" href="#laundry">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6h.01"/><path d="M11 6h.01"/></svg>
+            </div>
+            <h3>Booking Laundry</h3>
+            <p>Pickup & delivery langsung ke kos kamu. Pilih reguler, express, atau one-day.</p>
+            <span class="service-link">
+              Pesan sekarang
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+
+          <a class="service-card" data-nav="cleaning" href="#cleaning">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l4-4"/><path d="M9 15l3 3"/><path d="M14 11l3 3"/><path d="M18 8l-9 9"/><path d="M14 4l6 6"/><path d="M16 2l6 6-3 3-6-6z"/></svg>
+            </div>
+            <h3>Cleaning Service</h3>
+            <p>Mitra terverifikasi datang membersihkan kamar kamu sesuai jadwal yang fleksibel.</p>
+            <span class="service-link">
+              Pesan sekarang
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+
+          <a class="service-card" data-nav="tracking" href="#tracking">
+            <div class="service-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <h3>Tracking Status</h3>
+            <p>Pantau status pesanan kamu secara real-time dari pickup sampai selesai.</p>
+            <span class="service-link">
+              Lihat status
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="how">
+      <div class="container">
+        <div class="section-head">
+          <h2>Cara kerja Roomly</h2>
+          <p>Empat langkah sederhana untuk hidup yang lebih bersih dan rapi.</p>
+        </div>
+        <div class="how-grid">
+          <div class="how-step">
+            <div class="how-num">01</div>
+            <h4>Pilih layanan</h4>
+            <p>Pilih laundry atau cleaning service sesuai kebutuhan kamu.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-num">02</div>
+            <h4>Atur jadwal</h4>
+            <p>Tentukan tanggal & jam pickup yang paling cocok dengan jadwalmu.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-num">03</div>
+            <h4>Mitra datang</h4>
+            <p>Mitra terverifikasi akan datang sesuai waktu yang kamu tentukan.</p>
+          </div>
+          <div class="how-step">
+            <div class="how-num">04</div>
+            <h4>Pantau & terima</h4>
+            <p>Lacak status secara real-time hingga pesanan kembali bersih.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================
+       LAUNDRY BOOKING
+       ===================================== -->
+  <main id="page-laundry" class="page">
+    <div class="container page-container">
+      <div class="breadcrumb">
+        <a href="#home" data-nav="home">Beranda</a>
+        <span>›</span>
+        <span class="current">Booking Laundry</span>
+      </div>
+
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Booking Laundry</h1>
+          <p class="page-sub">Cucian bersih, datang ke kos. Pilih paket yang sesuai dengan kebutuhanmu.</p>
+        </div>
+        <div class="page-meta">
+          <span class="meta-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Mitra terverifikasi
+          </span>
+          <span class="meta-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l3 3 7-7"/><path d="M14 12l3 3 4-4"/></svg>
+            Pickup gratis
+          </span>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-main">
+
+          <!-- STEP 1: Service Type -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">1</span>
+              <div>
+                <h3>Pilih paket layanan</h3>
+                <p>Pilih kecepatan layanan sesuai kebutuhanmu.</p>
+              </div>
+            </div>
+            <div class="option-grid option-grid-3">
+              <label class="option-card" data-laundry-pkg>
+                <input type="radio" name="laundry-pkg" value="reguler" checked />
+                <div class="option-content">
+                  <div class="option-top">
+                    <span class="option-tag">Hemat</span>
+                    <span class="option-price">Rp 7K<small>/kg</small></span>
+                  </div>
+                  <h4>Reguler</h4>
+                  <p>Selesai dalam 2–3 hari</p>
+                </div>
+              </label>
+              <label class="option-card" data-laundry-pkg>
+                <input type="radio" name="laundry-pkg" value="express" />
+                <div class="option-content">
+                  <div class="option-top">
+                    <span class="option-tag tag-popular">Populer</span>
+                    <span class="option-price">Rp 12K<small>/kg</small></span>
+                  </div>
+                  <h4>Express</h4>
+                  <p>Selesai dalam 24 jam</p>
+                </div>
+              </label>
+              <label class="option-card" data-laundry-pkg>
+                <input type="radio" name="laundry-pkg" value="oneday" />
+                <div class="option-content">
+                  <div class="option-top">
+                    <span class="option-tag tag-fast">Tercepat</span>
+                    <span class="option-price">Rp 18K<small>/kg</small></span>
+                  </div>
+                  <h4>One-Day</h4>
+                  <p>Selesai hari yang sama</p>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <!-- STEP 2: Item Type -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">2</span>
+              <div>
+                <h3>Jenis cucian</h3>
+                <p>Pilih satu atau beberapa kategori pakaian.</p>
+              </div>
+            </div>
+            <div class="chip-row">
+              <label class="chip">
+                <input type="checkbox" checked />
+                <span>👕 Pakaian harian</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" />
+                <span>🛏️ Sprei & Bedcover</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" />
+                <span>👔 Setrika rapi</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" />
+                <span>🧥 Jaket & Coat</span>
+              </label>
+              <label class="chip">
+                <input type="checkbox" />
+                <span>👟 Sepatu</span>
+              </label>
+            </div>
+            <div class="weight-row">
+              <label class="form-label">Estimasi berat</label>
+              <div class="weight-input">
+                <button type="button" class="weight-btn" data-weight-act="dec">−</button>
+                <div class="weight-value"><span id="weight-val">3</span><small>kg</small></div>
+                <button type="button" class="weight-btn" data-weight-act="inc">+</button>
+              </div>
+              <span class="weight-hint">Kami akan menimbang ulang saat pickup.</span>
+            </div>
+          </section>
+
+          <!-- STEP 3: Pickup -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">3</span>
+              <div>
+                <h3>Jadwal pickup</h3>
+                <p>Mitra akan menjemput cucian di kamarmu.</p>
+              </div>
+            </div>
+            <div class="field-grid-2">
+              <div class="field">
+                <label class="form-label">Tanggal pickup</label>
+                <input type="date" class="input" value="2026-04-28" />
+              </div>
+              <div class="field">
+                <label class="form-label">Slot waktu</label>
+                <select class="input">
+                  <option>09.00 — 11.00</option>
+                  <option selected>14.00 — 16.00</option>
+                  <option>16.00 — 18.00</option>
+                  <option>18.00 — 20.00</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label class="form-label">Alamat kos</label>
+              <input type="text" class="input" value="Kos Asri Bawah, Jl. Cisitu Indah VI No. 12" />
+              <p class="field-hint">Pastikan alamat lengkap agar mitra mudah menemukan lokasi.</p>
+            </div>
+            <div class="field">
+              <label class="form-label">Catatan untuk mitra (opsional)</label>
+              <textarea class="input" rows="2" placeholder="Mis: tolong dipisah pakaian putih dan berwarna"></textarea>
+            </div>
+          </section>
+        </div>
+
+        <!-- SIDEBAR SUMMARY -->
+        <aside class="form-side">
+          <div class="summary">
+            <h3>Ringkasan Pesanan</h3>
+
+            <div class="sum-row">
+              <span class="sum-label">Paket</span>
+              <span class="sum-value" id="sum-pkg">Reguler</span>
+            </div>
+            <div class="sum-row">
+              <span class="sum-label">Estimasi berat</span>
+              <span class="sum-value"><span id="sum-weight">3</span> kg</span>
+            </div>
+            <div class="sum-row">
+              <span class="sum-label">Tarif</span>
+              <span class="sum-value"><span id="sum-rate">Rp 7.000</span>/kg</span>
+            </div>
+
+            <div class="sum-divider"></div>
+
+            <div class="sum-row">
+              <span class="sum-label">Subtotal</span>
+              <span class="sum-value" id="sum-sub">Rp 21.000</span>
+            </div>
+            <div class="sum-row">
+              <span class="sum-label">Biaya pickup</span>
+              <span class="sum-value sum-free">Gratis</span>
+            </div>
+
+            <div class="sum-divider"></div>
+
+            <div class="sum-row sum-total">
+              <span>Total</span>
+              <span id="sum-total">Rp 21.000</span>
+            </div>
+
+            <button class="btn-primary btn-block" id="confirm-laundry">
+              Konfirmasi Pesanan
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </button>
+            <p class="summary-note">Pembayaran setelah cucian selesai. Aman & transparan.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- =====================================
+       CLEANING SERVICE
+       ===================================== -->
+  <main id="page-cleaning" class="page">
+    <div class="container page-container">
+      <div class="breadcrumb">
+        <a href="#home" data-nav="home">Beranda</a>
+        <span>›</span>
+        <span class="current">Booking Cleaning Service</span>
+      </div>
+
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Booking Cleaning Service</h1>
+          <p class="page-sub">Mitra profesional terverifikasi siap membersihkan kamarmu.</p>
+        </div>
+        <div class="page-meta">
+          <span class="meta-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            ID Verified
+          </span>
+          <span class="meta-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h7l-5.5 4 2 7-6.5-4.5L5.5 20l2-7L2 9h7z"/></svg>
+            Rating ≥ 4.7
+          </span>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-main">
+
+          <!-- ROOM TYPE -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">1</span>
+              <div>
+                <h3>Tipe ruangan</h3>
+                <p>Pilih tipe tempat tinggalmu.</p>
+              </div>
+            </div>
+            <div class="option-grid option-grid-3">
+              <label class="option-card" data-clean-room>
+                <input type="radio" name="clean-room" value="kos" checked />
+                <div class="option-content">
+                  <div class="room-illu">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/></svg>
+                  </div>
+                  <h4>Kamar Kos</h4>
+                  <p>Standar &lt; 16 m²</p>
+                </div>
+              </label>
+              <label class="option-card" data-clean-room>
+                <input type="radio" name="clean-room" value="studio" />
+                <div class="option-content">
+                  <div class="room-illu">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>
+                  </div>
+                  <h4>Studio</h4>
+                  <p>16–25 m²</p>
+                </div>
+              </label>
+              <label class="option-card" data-clean-room>
+                <input type="radio" name="clean-room" value="apartment" />
+                <div class="option-content">
+                  <div class="room-illu">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 9h.01"/><path d="M15 9h.01"/><path d="M9 14h.01"/><path d="M15 14h.01"/></svg>
+                  </div>
+                  <h4>Apartemen</h4>
+                  <p>1–2 kamar tidur</p>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <!-- PACKAGE -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">2</span>
+              <div>
+                <h3>Paket pembersihan</h3>
+                <p>Pilih level pembersihan yang kamu butuhkan.</p>
+              </div>
+            </div>
+            <div class="package-list">
+              <label class="package-card" data-clean-pkg>
+                <input type="radio" name="clean-pkg" value="basic" checked />
+                <div class="package-content">
+                  <div class="package-info">
+                    <div class="package-head">
+                      <h4>Basic Cleaning</h4>
+                      <span class="package-time">~ 60 menit</span>
+                    </div>
+                    <p>Sapu, pel, lap meja, rapikan tempat tidur, dan buang sampah.</p>
+                  </div>
+                  <div class="package-right">
+                    <div class="package-price">Rp 45.000</div>
+                    <div class="package-tag">Cocok untuk perawatan rutin</div>
+                  </div>
+                </div>
+              </label>
+              <label class="package-card" data-clean-pkg>
+                <input type="radio" name="clean-pkg" value="deep" />
+                <div class="package-content">
+                  <div class="package-info">
+                    <div class="package-head">
+                      <h4>Deep Cleaning</h4>
+                      <span class="package-time">~ 120 menit</span>
+                    </div>
+                    <p>Termasuk pembersihan kamar mandi, dapur, dan area sulit dijangkau.</p>
+                  </div>
+                  <div class="package-right">
+                    <div class="package-price">Rp 89.000</div>
+                    <div class="package-tag tag-popular">Paling banyak dipilih</div>
+                  </div>
+                </div>
+              </label>
+              <label class="package-card" data-clean-pkg>
+                <input type="radio" name="clean-pkg" value="premium" />
+                <div class="package-content">
+                  <div class="package-info">
+                    <div class="package-head">
+                      <h4>Premium Care</h4>
+                      <span class="package-time">~ 180 menit</span>
+                    </div>
+                    <p>Deep cleaning + cuci kaca jendela, polishing furniture, dan disinfeksi.</p>
+                  </div>
+                  <div class="package-right">
+                    <div class="package-price">Rp 145.000</div>
+                    <div class="package-tag">Hasil maksimal</div>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <!-- ADD-ON -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">3</span>
+              <div>
+                <h3>Add-on (opsional)</h3>
+                <p>Tambahan untuk hasil yang lebih maksimal.</p>
+              </div>
+            </div>
+            <div class="addon-grid">
+              <label class="addon-card">
+                <input type="checkbox" />
+                <div>
+                  <div class="addon-title">Cuci kaca jendela</div>
+                  <div class="addon-price">+ Rp 25.000</div>
+                </div>
+              </label>
+              <label class="addon-card">
+                <input type="checkbox" />
+                <div>
+                  <div class="addon-title">Disinfeksi ruangan</div>
+                  <div class="addon-price">+ Rp 35.000</div>
+                </div>
+              </label>
+              <label class="addon-card">
+                <input type="checkbox" />
+                <div>
+                  <div class="addon-title">Cuci kasur (vacuum)</div>
+                  <div class="addon-price">+ Rp 50.000</div>
+                </div>
+              </label>
+              <label class="addon-card">
+                <input type="checkbox" />
+                <div>
+                  <div class="addon-title">Pengharum ruangan</div>
+                  <div class="addon-price">+ Rp 15.000</div>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <!-- SCHEDULE -->
+          <section class="form-section">
+            <div class="form-section-head">
+              <span class="step-num">4</span>
+              <div>
+                <h3>Jadwal kunjungan</h3>
+                <p>Tentukan kapan mitra harus datang.</p>
+              </div>
+            </div>
+            <div class="field-grid-2">
+              <div class="field">
+                <label class="form-label">Tanggal</label>
+                <input type="date" class="input" value="2026-04-29" />
+              </div>
+              <div class="field">
+                <label class="form-label">Slot waktu</label>
+                <select class="input">
+                  <option>08.00 — 10.00</option>
+                  <option selected>10.00 — 12.00</option>
+                  <option>13.00 — 15.00</option>
+                  <option>15.00 — 17.00</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label class="form-label">Alamat lengkap</label>
+              <input type="text" class="input" value="Kos Asri Bawah, Jl. Cisitu Indah VI No. 12, Bandung" />
+            </div>
+          </section>
+        </div>
+
+        <!-- SIDEBAR SUMMARY -->
+        <aside class="form-side">
+          <div class="summary">
+            <h3>Ringkasan Pesanan</h3>
+            <div class="sum-row">
+              <span class="sum-label">Tipe ruangan</span>
+              <span class="sum-value" id="sum-room">Kamar Kos</span>
+            </div>
+            <div class="sum-row">
+              <span class="sum-label">Paket</span>
+              <span class="sum-value" id="sum-cpkg">Basic Cleaning</span>
+            </div>
+            <div class="sum-divider"></div>
+            <div class="sum-row">
+              <span class="sum-label">Harga paket</span>
+              <span class="sum-value" id="sum-cprice">Rp 45.000</span>
+            </div>
+            <div class="sum-row">
+              <span class="sum-label">Add-on</span>
+              <span class="sum-value sum-free">Tidak ada</span>
+            </div>
+            <div class="sum-divider"></div>
+            <div class="sum-row sum-total">
+              <span>Total</span>
+              <span id="sum-ctotal">Rp 45.000</span>
+            </div>
+
+            <button class="btn-primary btn-block" id="confirm-cleaning">
+              Konfirmasi Pesanan
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+            </button>
+
+            <div class="partner-card">
+              <div class="partner-avatar">PB</div>
+              <div>
+                <div class="partner-name">Pak Bud · ID Verified</div>
+                <div class="partner-rating">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
+                  4.9 · 142 pekerjaan
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- =====================================
+       TRACKING ORDER
+       ===================================== -->
+  <main id="page-tracking" class="page">
+    <div class="container page-container">
+      <div class="breadcrumb">
+        <a href="#home" data-nav="home">Beranda</a>
+        <span>›</span>
+        <span class="current">Tracking Pesanan</span>
+      </div>
+
+      <div class="page-head">
+        <div>
+          <h1 class="page-title">Tracking Pesanan</h1>
+          <p class="page-sub">Pantau status pesananmu secara real-time.</p>
+        </div>
+        <div class="filter-tabs">
+          <button class="tab-btn tab-active">Aktif</button>
+          <button class="tab-btn">Selesai</button>
+          <button class="tab-btn">Semua</button>
+        </div>
+      </div>
+
+      <div class="tracking-layout">
+
+        <!-- ORDER LIST -->
+        <aside class="order-list">
+          <div class="order-card order-active" data-order="RML-0421">
+            <div class="order-card-head">
+              <span class="order-id">#RML-0421</span>
+              <span class="pill pill-progress">Sedang Dikerjakan</span>
+            </div>
+            <div class="order-service">
+              <span class="order-icon order-icon-laundry">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="4"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
+              </span>
+              Laundry Express · 3 kg
+            </div>
+            <div class="order-meta">
+              <span>📅 27 Apr · 14.00</span>
+              <span>Rp 36.000</span>
+            </div>
+          </div>
+
+          <div class="order-card" data-order="RML-0418">
+            <div class="order-card-head">
+              <span class="order-id">#RML-0418</span>
+              <span class="pill pill-pickup">Pickup</span>
+            </div>
+            <div class="order-service">
+              <span class="order-icon order-icon-clean">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l4-4"/><path d="M9 15l3 3"/><path d="M16 2l6 6-3 3-6-6z"/></svg>
+              </span>
+              Deep Cleaning
+            </div>
+            <div class="order-meta">
+              <span>📅 27 Apr · 16.30</span>
+              <span>Rp 89.000</span>
+            </div>
+          </div>
+
+          <div class="order-card" data-order="RML-0410">
+            <div class="order-card-head">
+              <span class="order-id">#RML-0410</span>
+              <span class="pill pill-pending">Menunggu</span>
+            </div>
+            <div class="order-service">
+              <span class="order-icon order-icon-laundry">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="4"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
+              </span>
+              Laundry Reguler · 5 kg
+            </div>
+            <div class="order-meta">
+              <span>📅 28 Apr · 09.00</span>
+              <span>Rp 35.000</span>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ORDER DETAIL -->
+        <section class="order-detail">
+
+          <div class="detail-head">
+            <div>
+              <div class="detail-id">Order #RML-0421</div>
+              <h2>Laundry Express · 3 kg</h2>
+            </div>
+            <span class="pill pill-progress pill-lg">
+              <span class="pulse"></span>
+              Sedang Dikerjakan
+            </span>
+          </div>
+
+          <!-- PROGRESS BAR -->
+          <div class="progress-card">
+            <div class="progress-info">
+              <div>
+                <div class="progress-label">Estimasi selesai</div>
+                <div class="progress-value">Hari ini, 18.30 WIB</div>
+              </div>
+              <div class="progress-percent">62%</div>
+            </div>
+            <div class="progress-bar"><div class="progress-bar-fill" style="width:62%"></div></div>
+          </div>
+
+          <!-- PARTNER -->
+          <div class="partner-block">
+            <div class="partner-avatar partner-avatar-lg">BA</div>
+            <div class="partner-info-lg">
+              <div class="partner-row">
+                <h4>Bu Atik Laundry</h4>
+                <span class="verified-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  Verified
+                </span>
+              </div>
+              <div class="partner-meta-lg">
+                <span>⭐ 4.9 (320 ulasan)</span>
+                <span>📍 1.2 km dari kos</span>
+              </div>
+            </div>
+            <div class="partner-actions">
+              <button class="icon-btn" title="Chat">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </button>
+              <button class="icon-btn" title="Telepon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92V21a1 1 0 01-1.1 1A19 19 0 012 4.1 1 1 0 013 3h4.1a1 1 0 011 .8 12 12 0 00.7 2.6 1 1 0 01-.2 1L7 9a16 16 0 008 8l1.6-1.6a1 1 0 011-.2 12 12 0 002.6.7 1 1 0 01.8 1z"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- TIMELINE -->
+          <div class="timeline">
+            <h4 class="timeline-title">Status Pesanan</h4>
+
+            <div class="timeline-item done">
+              <div class="timeline-dot">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-row">
+                  <h5>Pesanan dibuat</h5>
+                  <span class="timeline-time">14.02</span>
+                </div>
+                <p>Pesanan kamu sudah diterima oleh sistem.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item done">
+              <div class="timeline-dot">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-row">
+                  <h5>Pickup berhasil</h5>
+                  <span class="timeline-time">14.18</span>
+                </div>
+                <p>Mitra sudah menjemput cucian dari kos kamu.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item active">
+              <div class="timeline-dot timeline-dot-active">
+                <span class="dot-pulse"></span>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-row">
+                  <h5>Sedang dicuci</h5>
+                  <span class="timeline-time timeline-time-now">Sekarang</span>
+                </div>
+                <p>Pakaian sedang dalam proses pencucian & pengeringan.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-row">
+                  <h5>Setrika & lipat</h5>
+                  <span class="timeline-time">~ 17.00</span>
+                </div>
+                <p>Pakaian akan disetrika dan dilipat rapi.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-row">
+                  <h5>Diantar ke kos</h5>
+                  <span class="timeline-time">~ 18.30</span>
+                </div>
+                <p>Mitra akan mengantar cucian bersih ke alamat kamu.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ORDER INFO -->
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="info-label">Alamat pickup</div>
+              <div class="info-value">Kos Asri Bawah</div>
+              <div class="info-sub">Jl. Cisitu Indah VI No. 12</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Total pembayaran</div>
+              <div class="info-value">Rp 36.000</div>
+              <div class="info-sub">Bayar setelah selesai</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Catatan</div>
+              <div class="info-value">Pisah putih & berwarna</div>
+              <div class="info-sub">Setrika rapi</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <div class="brand">
+          <span class="brand-logo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><circle cx="12" cy="14" r="3"/></svg>
+          </span>
+          <span class="brand-name">Roomly</span>
+        </div>
+        <p class="footer-tagline">Solusi terintegrasi untuk anak kos. Lebih mudah, aman, dan terjangkau.</p>
+      </div>
+      <div>
+        <h5>Layanan</h5>
+        <a href="#laundry" data-nav="laundry">Booking Laundry</a>
+        <a href="#cleaning" data-nav="cleaning">Cleaning Service</a>
+        <a href="#tracking" data-nav="tracking">Tracking Order</a>
+      </div>
+      <div>
+        <h5>Perusahaan</h5>
+        <a href="#">Tentang Kami</a>
+        <a href="#">Mitra</a>
+        <a href="#">Karir</a>
+      </div>
+      <div>
+        <h5>Bantuan</h5>
+        <a href="#">FAQ</a>
+        <a href="#">Hubungi kami</a>
+        <a href="#">Privasi</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 Roomly · Group 09 II4051 Product Management</span>
+      <span>Made for mahasiswa kos 💙</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+  <span id="toast-msg">Pesanan berhasil dibuat!</span>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
