@@ -1,20 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { api, formatRupiah } from "../api.js";
+import { useAuth } from "../auth.jsx";
 
-const initialForm = {
-  customerName: "",
-  phone: "",
-  address: "",
-  serviceId: "",
-  sessions: 1,
-  scheduleDate: "",
-  scheduleTime: "",
-  notes: ""
-};
-
+const initialForm = { serviceId: "", sessions: 1, scheduleDate: "", scheduleTime: "", notes: "" };
 const timeSlots = ["08:00", "10:00", "13:00", "15:00", "17:00"];
 
 export default function CleaningBooking() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
@@ -22,21 +16,18 @@ export default function CleaningBooking() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.getCleaningServices()
-      .then(setServices)
-      .catch((err) => setError(err.message));
+    api.getCleaningServices().then(setServices).catch((err) => setError(err.message));
   }, []);
 
   const selectedService = useMemo(
     () => services.find((s) => s.id === form.serviceId),
     [services, form.serviceId]
   );
-
   const total = selectedService ? selectedService.price * Number(form.sessions || 0) : 0;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((p) => ({ ...p, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -45,7 +36,7 @@ export default function CleaningBooking() {
     setError(null);
     setSuccess(null);
     try {
-      const booking = await api.createCleaningBooking(form);
+      const booking = await api.createCleaningBooking({ ...form, userId: user.id });
       setSuccess(booking);
       setForm(initialForm);
     } catch (err) {
@@ -55,12 +46,27 @@ export default function CleaningBooking() {
     }
   };
 
+  const profileIncomplete = !user.address;
+
   return (
     <div className="booking-page">
       <div className="page-header">
         <h1>🧹 Booking Cleaning Service</h1>
         <p>Pilih jenis cleaning dan tentukan jadwal kunjungan tim kami.</p>
       </div>
+
+      <div className="profile-banner">
+        <div>
+          <strong>👤 {user.name}</strong>
+          <span> · {user.phone}</span>
+          <p className="muted">📍 {user.address || <em>Alamat belum diisi</em>}</p>
+        </div>
+        <Link to="/profile" className="btn btn-secondary">Edit Profil</Link>
+      </div>
+
+      {profileIncomplete && (
+        <div className="alert error">⚠️ Lengkapi alamat di <Link to="/profile">profil</Link> sebelum memesan.</div>
+      )}
 
       <div className="booking-layout">
         <div className="services-list">
@@ -70,7 +76,7 @@ export default function CleaningBooking() {
               key={service.id}
               type="button"
               className={`service-option ${form.serviceId === service.id ? "selected" : ""}`}
-              onClick={() => setForm((prev) => ({ ...prev, serviceId: service.id }))}
+              onClick={() => setForm((p) => ({ ...p, serviceId: service.id }))}
             >
               <div className="service-option-icon">{service.icon}</div>
               <div className="service-option-info">
@@ -87,41 +93,6 @@ export default function CleaningBooking() {
 
         <form className="booking-form" onSubmit={handleSubmit}>
           <h2>Detail Pemesanan</h2>
-
-          <label>
-            Nama Lengkap
-            <input
-              name="customerName"
-              value={form.customerName}
-              onChange={handleChange}
-              placeholder="Contoh: Siti Aminah"
-              required
-            />
-          </label>
-
-          <label>
-            Nomor HP / WhatsApp
-            <input
-              name="phone"
-              type="tel"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="08xxxxxxxxxx"
-              required
-            />
-          </label>
-
-          <label>
-            Alamat Lokasi
-            <textarea
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              placeholder="Alamat lengkap rumah/apartemen"
-              rows={3}
-              required
-            />
-          </label>
 
           <div className="form-row">
             <label>
@@ -157,7 +128,7 @@ export default function CleaningBooking() {
                   key={time}
                   type="button"
                   className={`time-slot ${form.scheduleTime === time ? "selected" : ""}`}
-                  onClick={() => setForm((prev) => ({ ...prev, scheduleTime: time }))}
+                  onClick={() => setForm((p) => ({ ...p, scheduleTime: time }))}
                 >
                   {time}
                 </button>
@@ -178,36 +149,27 @@ export default function CleaningBooking() {
 
           {selectedService && (
             <div className="summary">
-              <div className="summary-row">
-                <span>Layanan</span>
-                <strong>{selectedService.name}</strong>
-              </div>
-              <div className="summary-row">
-                <span>Harga per sesi</span>
-                <span>{formatRupiah(selectedService.price)}</span>
-              </div>
-              <div className="summary-row">
-                <span>Jumlah Sesi</span>
-                <span>{form.sessions}</span>
-              </div>
-              <div className="summary-row total">
-                <span>Total</span>
-                <strong>{formatRupiah(total)}</strong>
-              </div>
+              <div className="summary-row"><span>Layanan</span><strong>{selectedService.name}</strong></div>
+              <div className="summary-row"><span>Harga / sesi</span><span>{formatRupiah(selectedService.price)}</span></div>
+              <div className="summary-row"><span>Jumlah Sesi</span><span>{form.sessions}</span></div>
+              <div className="summary-row total"><span>Total</span><strong>{formatRupiah(total)}</strong></div>
             </div>
           )}
 
           {error && <div className="alert error">⚠️ {error}</div>}
           {success && (
             <div className="alert success">
-              ✅ Booking berhasil! ID: <strong>{success.id}</strong>
+              ✅ Booking berhasil! ID: <strong>{success.id}</strong>{" "}
+              <button type="button" className="link-btn" onClick={() => navigate(`/tracking/${success.id}`)}>
+                Lihat tracking →
+              </button>
             </div>
           )}
 
           <button
             type="submit"
             className="btn btn-primary btn-block"
-            disabled={loading || !form.serviceId || !form.scheduleTime}
+            disabled={loading || !form.serviceId || !form.scheduleTime || profileIncomplete}
           >
             {loading ? "Memproses..." : "Konfirmasi Pesanan"}
           </button>

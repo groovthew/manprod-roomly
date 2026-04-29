@@ -1,17 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { api, formatRupiah } from "../api.js";
+import { useAuth } from "../auth.jsx";
 
-const initialForm = {
-  customerName: "",
-  phone: "",
-  address: "",
-  serviceId: "",
-  quantity: 1,
-  pickupDate: "",
-  notes: ""
-};
+const initialForm = { serviceId: "", quantity: 1, pickupDate: "", notes: "" };
 
 export default function LaundryBooking() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
@@ -19,21 +15,18 @@ export default function LaundryBooking() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.getLaundryServices()
-      .then(setServices)
-      .catch((err) => setError(err.message));
+    api.getLaundryServices().then(setServices).catch((err) => setError(err.message));
   }, []);
 
   const selectedService = useMemo(
     () => services.find((s) => s.id === form.serviceId),
     [services, form.serviceId]
   );
-
   const total = selectedService ? selectedService.price * Number(form.quantity || 0) : 0;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((p) => ({ ...p, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -42,7 +35,7 @@ export default function LaundryBooking() {
     setError(null);
     setSuccess(null);
     try {
-      const booking = await api.createLaundryBooking(form);
+      const booking = await api.createLaundryBooking({ ...form, userId: user.id });
       setSuccess(booking);
       setForm(initialForm);
     } catch (err) {
@@ -52,12 +45,27 @@ export default function LaundryBooking() {
     }
   };
 
+  const profileIncomplete = !user.address;
+
   return (
     <div className="booking-page">
       <div className="page-header">
         <h1>🧺 Booking Laundry Service</h1>
-        <p>Pilih jenis layanan dan jadwal penjemputan. Tim kami akan menjemput pakaian Anda.</p>
+        <p>Pilih jenis layanan dan jadwal penjemputan. Identitas otomatis dari profil Anda.</p>
       </div>
+
+      <div className="profile-banner">
+        <div>
+          <strong>👤 {user.name}</strong>
+          <span> · {user.phone}</span>
+          <p className="muted">📍 {user.address || <em>Alamat belum diisi</em>}</p>
+        </div>
+        <Link to="/profile" className="btn btn-secondary">Edit Profil</Link>
+      </div>
+
+      {profileIncomplete && (
+        <div className="alert error">⚠️ Lengkapi alamat di <Link to="/profile">profil</Link> sebelum memesan.</div>
+      )}
 
       <div className="booking-layout">
         <div className="services-list">
@@ -67,7 +75,7 @@ export default function LaundryBooking() {
               key={service.id}
               type="button"
               className={`service-option ${form.serviceId === service.id ? "selected" : ""}`}
-              onClick={() => setForm((prev) => ({ ...prev, serviceId: service.id }))}
+              onClick={() => setForm((p) => ({ ...p, serviceId: service.id }))}
             >
               <div className="service-option-icon">{service.icon}</div>
               <div className="service-option-info">
@@ -84,41 +92,6 @@ export default function LaundryBooking() {
 
         <form className="booking-form" onSubmit={handleSubmit}>
           <h2>Detail Pemesanan</h2>
-
-          <label>
-            Nama Lengkap
-            <input
-              name="customerName"
-              value={form.customerName}
-              onChange={handleChange}
-              placeholder="Contoh: Budi Santoso"
-              required
-            />
-          </label>
-
-          <label>
-            Nomor HP / WhatsApp
-            <input
-              name="phone"
-              type="tel"
-              value={form.phone}
-              onChange={handleChange}
-              placeholder="08xxxxxxxxxx"
-              required
-            />
-          </label>
-
-          <label>
-            Alamat Penjemputan
-            <textarea
-              name="address"
-              value={form.address}
-              onChange={handleChange}
-              placeholder="Alamat lengkap (jalan, nomor, RT/RW, kelurahan)"
-              rows={3}
-              required
-            />
-          </label>
 
           <div className="form-row">
             <label>
@@ -160,36 +133,27 @@ export default function LaundryBooking() {
 
           {selectedService && (
             <div className="summary">
-              <div className="summary-row">
-                <span>Layanan</span>
-                <strong>{selectedService.name}</strong>
-              </div>
-              <div className="summary-row">
-                <span>Harga per {selectedService.unit}</span>
-                <span>{formatRupiah(selectedService.price)}</span>
-              </div>
-              <div className="summary-row">
-                <span>Jumlah</span>
-                <span>{form.quantity} {selectedService.unit}</span>
-              </div>
-              <div className="summary-row total">
-                <span>Total</span>
-                <strong>{formatRupiah(total)}</strong>
-              </div>
+              <div className="summary-row"><span>Layanan</span><strong>{selectedService.name}</strong></div>
+              <div className="summary-row"><span>Harga / {selectedService.unit}</span><span>{formatRupiah(selectedService.price)}</span></div>
+              <div className="summary-row"><span>Jumlah</span><span>{form.quantity} {selectedService.unit}</span></div>
+              <div className="summary-row total"><span>Total</span><strong>{formatRupiah(total)}</strong></div>
             </div>
           )}
 
           {error && <div className="alert error">⚠️ {error}</div>}
           {success && (
             <div className="alert success">
-              ✅ Booking berhasil! ID: <strong>{success.id}</strong>
+              ✅ Booking berhasil! ID: <strong>{success.id}</strong>{" "}
+              <button type="button" className="link-btn" onClick={() => navigate(`/tracking/${success.id}`)}>
+                Lihat tracking →
+              </button>
             </div>
           )}
 
           <button
             type="submit"
             className="btn btn-primary btn-block"
-            disabled={loading || !form.serviceId}
+            disabled={loading || !form.serviceId || profileIncomplete}
           >
             {loading ? "Memproses..." : "Konfirmasi Pesanan"}
           </button>

@@ -1,47 +1,36 @@
 import { useEffect, useState } from "react";
-import { api, formatRupiah } from "../api.js";
+import { Link } from "react-router-dom";
+import { api, formatRupiah, formatDateTime } from "../api.js";
+import { useAuth } from "../auth.jsx";
 
-const STATUSES = ["Menunggu Konfirmasi", "Diproses", "Selesai", "Dibatalkan"];
-
-const statusClass = (status) =>
+const statusClass = (s) =>
   ({
-    "Menunggu Konfirmasi": "status-pending",
+    "Diterima": "status-pending",
+    "Dikonfirmasi": "status-confirmed",
     "Diproses": "status-processing",
     "Selesai": "status-done",
     "Dibatalkan": "status-cancelled"
-  }[status] || "");
+  }[s] || "");
 
-export default function Bookings() {
+export default function MyBookings() {
+  const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
-  const load = async () => {
-    setLoading(true);
-    try {
-      const data = await api.getAllBookings();
-      setBookings(data);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    load();
-  }, []);
-
-  const handleStatusChange = async (id, status) => {
-    await api.updateStatus(id, status);
-    load();
-  };
+    api.getUserBookings(user.id)
+      .then(setBookings)
+      .finally(() => setLoading(false));
+  }, [user.id]);
 
   const filtered = filter === "all" ? bookings : bookings.filter((b) => b.type === filter);
 
   return (
     <div className="bookings-page">
       <div className="page-header">
-        <h1>📋 Daftar Pesanan</h1>
-        <p>Kelola dan pantau semua pesanan layanan Anda di sini.</p>
+        <h1>📋 Pesanan Saya</h1>
+        <p>Pantau status pesanan Anda secara real-time.</p>
       </div>
 
       <div className="filter-tabs">
@@ -60,7 +49,11 @@ export default function Bookings() {
       {!loading && filtered.length === 0 && (
         <div className="empty">
           <p>Belum ada pesanan.</p>
-          <p>Mulai pesan layanan Roomly sekarang!</p>
+          <p>Pesan layanan Roomly sekarang!</p>
+          <div style={{ marginTop: "1rem", display: "flex", gap: "0.75rem", justifyContent: "center", flexWrap: "wrap" }}>
+            <Link to="/laundry" className="btn btn-primary">🧺 Pesan Laundry</Link>
+            <Link to="/cleaning" className="btn btn-secondary">🧹 Pesan Cleaning</Link>
+          </div>
         </div>
       )}
 
@@ -69,9 +62,7 @@ export default function Bookings() {
           <div key={booking.id} className="booking-card">
             <div className="booking-card-header">
               <div>
-                <span className="booking-type">
-                  {booking.type === "laundry" ? "🧺 Laundry" : "🧹 Cleaning"}
-                </span>
+                <span className="booking-type">{booking.type === "laundry" ? "🧺 Laundry" : "🧹 Cleaning"}</span>
                 <h3>{booking.service.name}</h3>
               </div>
               <span className={`status-badge ${statusClass(booking.status)}`}>{booking.status}</span>
@@ -79,15 +70,14 @@ export default function Bookings() {
 
             <div className="booking-card-body">
               <div className="booking-info">
-                <span>👤 {booking.customerName}</span>
-                <span>📞 {booking.phone}</span>
-                <span>📍 {booking.address}</span>
                 {booking.type === "laundry" ? (
                   <span>📅 Penjemputan: {booking.pickupDate}</span>
                 ) : (
                   <span>📅 Jadwal: {booking.scheduleDate} pukul {booking.scheduleTime}</span>
                 )}
+                <span>📍 {booking.address}</span>
                 {booking.notes && <span>📝 {booking.notes}</span>}
+                <span className="muted">Dipesan {formatDateTime(booking.createdAt)}</span>
               </div>
 
               <div className="booking-total">
@@ -96,17 +86,9 @@ export default function Bookings() {
               </div>
             </div>
 
-            <div className="booking-card-footer">
-              <small>ID: {booking.id}</small>
-              <select
-                value={booking.status}
-                onChange={(e) => handleStatusChange(booking.id, e.target.value)}
-              >
-                {STATUSES.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
+            <Link to={`/tracking/${booking.id}`} className="btn btn-primary btn-block">
+              📍 Lihat Live Tracking
+            </Link>
           </div>
         ))}
       </div>

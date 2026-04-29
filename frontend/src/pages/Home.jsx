@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../auth.jsx";
 
 export default function Home() {
+  const { user } = useAuth();
+
   return (
     <div className="home">
       <section className="hero">
@@ -9,13 +12,22 @@ export default function Home() {
           Solusi praktis untuk laundry dan kebersihan rumah Anda. Pesan dalam satu klik, tenaga profesional siap datang.
         </p>
         <div className="hero-cta">
-          <Link to="/laundry" className="btn btn-primary">Pesan Laundry</Link>
-          <Link to="/cleaning" className="btn btn-secondary">Pesan Cleaning</Link>
+          {user ? (
+            <>
+              <Link to="/laundry" className="btn btn-primary">Pesan Laundry</Link>
+              <Link to="/cleaning" className="btn btn-secondary">Pesan Cleaning</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn btn-primary">Masuk / Daftar</Link>
+              <Link to="/laundry" className="btn btn-secondary">Lihat Layanan</Link>
+            </>
+          )}
         </div>
       </section>
 
       <section className="services-grid">
-        <Link to="/laundry" className="service-card laundry">
+        <Link to={user ? "/laundry" : "/login"} className="service-card laundry">
           <div className="service-icon">🧺</div>
           <h2>Booking Laundry Service</h2>
           <p>Cuci, setrika, dry clean & express service. Diambil dan diantar langsung ke rumah Anda.</p>
@@ -27,7 +39,7 @@ export default function Home() {
           <span className="card-cta">Pesan Sekarang →</span>
         </Link>
 
-        <Link to="/cleaning" className="service-card cleaning">
+        <Link to={user ? "/cleaning" : "/login"} className="service-card cleaning">
           <div className="service-icon">🧹</div>
           <h2>Booking Cleaning Service</h2>
           <p>Tim cleaning profesional untuk rumah, apartemen, kamar mandi, hingga pasca renovasi.</p>
@@ -49,9 +61,9 @@ export default function Home() {
             <p>Pemesanan online, jadwal fleksibel sesuai kebutuhan Anda.</p>
           </div>
           <div className="feature">
-            <div className="feature-icon">💰</div>
-            <h3>Harga Transparan</h3>
-            <p>Tarif jelas tanpa biaya tersembunyi. Bayar sesuai layanan.</p>
+            <div className="feature-icon">📍</div>
+            <h3>Live Tracking</h3>
+            <p>Pantau status pesanan dari diterima sampai selesai secara real-time.</p>
           </div>
           <div className="feature">
             <div className="feature-icon">⭐</div>

@@ -5,12 +5,18 @@ async function request(path, options = {}) {
     headers: { "Content-Type": "application/json" },
     ...options
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || "Terjadi kesalahan");
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : {};
+  if (!res.ok) throw new Error(data.error || `Request gagal (${res.status})`);
   return data;
 }
 
 export const api = {
+  register: (payload) => request("/auth/register", { method: "POST", body: JSON.stringify(payload) }),
+  login: (phone) => request("/auth/login", { method: "POST", body: JSON.stringify({ phone }) }),
+  getUser: (id) => request(`/users/${id}`),
+  updateUser: (id, payload) => request(`/users/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+
   getLaundryServices: () => request("/laundry/services"),
   createLaundryBooking: (payload) =>
     request("/laundry/bookings", { method: "POST", body: JSON.stringify(payload) }),
@@ -20,9 +26,16 @@ export const api = {
     request("/cleaning/bookings", { method: "POST", body: JSON.stringify(payload) }),
 
   getAllBookings: () => request("/bookings"),
-  updateStatus: (id, status) =>
-    request(`/bookings/${id}/status`, { method: "PATCH", body: JSON.stringify({ status }) })
+  getUserBookings: (userId) => request(`/bookings/user/${userId}`),
+  getBooking: (id) => request(`/bookings/${id}`),
+  updateStatus: (id, status, note) =>
+    request(`/bookings/${id}/status`, { method: "PATCH", body: JSON.stringify({ status, note }) })
 };
 
 export const formatRupiah = (amount) =>
   new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(amount);
+
+export const formatDateTime = (iso) =>
+  new Date(iso).toLocaleString("id-ID", {
+    day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+  });
