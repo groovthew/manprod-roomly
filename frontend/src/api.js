@@ -13,7 +13,8 @@ async function request(path, options = {}) {
 
 export const api = {
   register: (payload) => request("/auth/register", { method: "POST", body: JSON.stringify(payload) }),
-  login: (phone) => request("/auth/login", { method: "POST", body: JSON.stringify({ phone }) }),
+  login: (username, password) =>
+    request("/auth/login", { method: "POST", body: JSON.stringify({ username, password }) }),
   getUser: (id) => request(`/users/${id}`),
   updateUser: (id, payload) => request(`/users/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
 

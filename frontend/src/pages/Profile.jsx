@@ -9,6 +9,12 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const [pwOpen, setPwOpen] = useState(false);
+  const [pwForm, setPwForm] = useState({ password: "", confirm: "" });
+  const [pwLoading, setPwLoading] = useState(false);
+  const [pwError, setPwError] = useState(null);
+  const [pwSuccess, setPwSuccess] = useState(false);
+
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
@@ -27,6 +33,33 @@ export default function Profile() {
     }
   };
 
+  const handlePwChange = (e) => setPwForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+
+  const handlePwSubmit = async (e) => {
+    e.preventDefault();
+    setPwError(null);
+    setPwSuccess(false);
+    if (pwForm.password !== pwForm.confirm) {
+      setPwError("Konfirmasi password tidak cocok");
+      return;
+    }
+    if (pwForm.password.length < 6) {
+      setPwError("Password minimal 6 karakter");
+      return;
+    }
+    setPwLoading(true);
+    try {
+      await updateProfile({ password: pwForm.password });
+      setPwSuccess(true);
+      setPwForm({ password: "", confirm: "" });
+      setTimeout(() => setPwOpen(false), 1500);
+    } catch (err) {
+      setPwError(err.message);
+    } finally {
+      setPwLoading(false);
+    }
+  };
+
   return (
     <div className="profile-page">
       <div className="page-header">
@@ -38,6 +71,7 @@ export default function Profile() {
         <div className="profile-avatar">{user.name.charAt(0).toUpperCase()}</div>
         <div className="profile-meta">
           <h2>{user.name}</h2>
+          <p className="muted">@{user.username}</p>
           <span className={`role-badge ${user.role}`}>{user.role === "admin" ? "🛡️ Admin" : "👤 Pelanggan"}</span>
         </div>
       </div>
@@ -46,18 +80,23 @@ export default function Profile() {
         <h2>Detail Identitas</h2>
 
         <label>
+          Username (tidak dapat diubah)
+          <input value={user.username} disabled />
+        </label>
+
+        <label>
           Nama Lengkap
           <input name="name" value={form.name} onChange={handleChange} disabled={!editing} required />
         </label>
 
         <label>
           Nomor HP / WhatsApp
-          <input name="phone" type="tel" value={form.phone} onChange={handleChange} disabled={!editing} required />
+          <input name="phone" type="tel" value={form.phone} onChange={handleChange} disabled={!editing} />
         </label>
 
         <label>
           Alamat
-          <textarea name="address" value={form.address} onChange={handleChange} rows={3} disabled={!editing} placeholder="Alamat akan dipakai untuk penjemputan/kunjungan layanan" />
+          <textarea name="address" value={form.address} onChange={handleChange} rows={3} disabled={!editing} placeholder="Alamat untuk penjemputan/kunjungan layanan" />
         </label>
 
         {error && <div className="alert error">⚠️ {error}</div>}
@@ -85,6 +124,49 @@ export default function Profile() {
           <button type="button" className="btn btn-danger" onClick={logout}>🚪 Logout</button>
         </div>
       </form>
+
+      <div className="profile-form" style={{ marginTop: "1.5rem" }}>
+        <div className="profile-form-toggle">
+          <h2>🔒 Keamanan Akun</h2>
+          <button type="button" className="link-btn" onClick={() => { setPwOpen((v) => !v); setPwError(null); setPwSuccess(false); }}>
+            {pwOpen ? "Tutup" : "Ganti Password"}
+          </button>
+        </div>
+
+        {pwOpen && (
+          <form onSubmit={handlePwSubmit}>
+            <label>
+              Password Baru
+              <input
+                name="password"
+                type="password"
+                value={pwForm.password}
+                onChange={handlePwChange}
+                placeholder="Minimal 6 karakter"
+                autoComplete="new-password"
+                required
+              />
+            </label>
+            <label>
+              Konfirmasi Password
+              <input
+                name="confirm"
+                type="password"
+                value={pwForm.confirm}
+                onChange={handlePwChange}
+                placeholder="Ulangi password baru"
+                autoComplete="new-password"
+                required
+              />
+            </label>
+            {pwError && <div className="alert error">⚠️ {pwError}</div>}
+            {pwSuccess && <div className="alert success">✅ Password berhasil diganti</div>}
+            <button type="submit" className="btn btn-primary" disabled={pwLoading}>
+              {pwLoading ? "Menyimpan..." : "Update Password"}
+            </button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

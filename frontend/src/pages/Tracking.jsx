@@ -53,7 +53,7 @@ export default function Tracking() {
     <div className="tracking-page">
       <div className="page-header">
         <Link to="/my-bookings" className="back-link">← Kembali ke Pesanan</Link>
-        <h1>📍 Live Tracking</h1>
+        <h1>Order Status</h1>
         <p>
           ID: <code>{booking.id}</code>
           <span className="live-indicator">

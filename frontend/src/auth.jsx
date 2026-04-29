@@ -33,8 +33,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(STORAGE_KEY);
   };
 
-  const login = async (phone) => {
-    const u = await api.login(phone);
+  const login = async (username, password) => {
+    const u = await api.login(username, password);
     persist(u);
     return u;
   };

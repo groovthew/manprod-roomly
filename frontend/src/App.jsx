@@ -38,7 +38,6 @@ function Shell() {
       {!isAdmin && <NavLink to="/cleaning">Cleaning</NavLink>}
       {user && !isAdmin && <NavLink to="/my-bookings">Pesanan Saya</NavLink>}
       {isAdmin && <NavLink to="/admin">Admin</NavLink>}
-      {user && <NavLink to="/profile">Profil</NavLink>}
     </>
   );
 
@@ -54,7 +53,10 @@ function Shell() {
 
         <div className="nav-right">
           {user ? (
-            <button className="btn-ghost" onClick={logout}>Logout</button>
+            <Link to="/profile" className="profile-chip" title="Buka profil">
+              <span className="profile-chip-avatar">{user.name.charAt(0).toUpperCase()}</span>
+              <span className="profile-chip-name">{user.name}</span>
+            </Link>
           ) : (
             <Link to="/login" className="btn btn-primary btn-sm">Masuk</Link>
           )}

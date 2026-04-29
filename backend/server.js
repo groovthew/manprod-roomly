@@ -28,6 +28,8 @@ const cleaningServices = [
 const users = [
   {
     id: "admin-001",
+    username: "admin",
+    password: "admin123",
     name: "Admin Roomly",
     phone: "0800000000",
     address: "Kantor Pusat Roomly",
@@ -36,11 +38,18 @@ const users = [
   }
 ];
 
+const sanitize = (user) => {
+  if (!user) return user;
+  const { password, ...safe } = user;
+  return safe;
+};
+
 const laundryBookings = [];
 const cleaningBookings = [];
 
 const generateId = (prefix) => `${prefix}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
-const findUserByPhone = (phone) => users.find((u) => u.phone === phone);
+const findUserByUsername = (username) =>
+  users.find((u) => u.username.toLowerCase() === String(username || "").toLowerCase());
 const findUserById = (id) => users.find((u) => u.id === id);
 const findBookingById = (id) =>
   laundryBookings.find((b) => b.id === id) || cleaningBookings.find((b) => b.id === id);
@@ -58,47 +67,56 @@ app.get("/api/health", (_req, res) => res.json({ status: "ok", service: "Roomly 
    Auth & Users
    ==================== */
 app.post("/api/auth/register", (req, res) => {
-  const { name, phone, address, role } = req.body;
-  if (!name || !phone) return res.status(400).json({ error: "Nama dan nomor HP wajib diisi" });
-  if (findUserByPhone(phone)) return res.status(409).json({ error: "Nomor HP sudah terdaftar" });
+  const { username, password, name, phone, address, role } = req.body;
+  if (!username || !password || !name) {
+    return res.status(400).json({ error: "Username, password, dan nama wajib diisi" });
+  }
+  if (String(username).length < 3) return res.status(400).json({ error: "Username minimal 3 karakter" });
+  if (String(password).length < 6) return res.status(400).json({ error: "Password minimal 6 karakter" });
+  if (findUserByUsername(username)) return res.status(409).json({ error: "Username sudah dipakai" });
 
   const user = {
     id: generateId("USR"),
+    username: String(username).toLowerCase(),
+    password,
     name,
-    phone,
+    phone: phone || "",
     address: address || "",
     role: role === "admin" ? "admin" : "user",
     createdAt: new Date().toISOString()
   };
   users.push(user);
-  res.status(201).json(user);
+  res.status(201).json(sanitize(user));
 });
 
 app.post("/api/auth/login", (req, res) => {
-  const { phone } = req.body;
-  if (!phone) return res.status(400).json({ error: "Nomor HP wajib diisi" });
-  const user = findUserByPhone(phone);
-  if (!user) return res.status(404).json({ error: "Nomor HP belum terdaftar. Silakan daftar dulu." });
-  res.json(user);
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: "Username dan password wajib diisi" });
+  const user = findUserByUsername(username);
+  if (!user || user.password !== password) {
+    return res.status(401).json({ error: "Username atau password salah" });
+  }
+  res.json(sanitize(user));
 });
 
 app.get("/api/users/:id", (req, res) => {
   const user = findUserById(req.params.id);
   if (!user) return res.status(404).json({ error: "User tidak ditemukan" });
-  res.json(user);
+  res.json(sanitize(user));
 });
 
 app.patch("/api/users/:id", (req, res) => {
   const user = findUserById(req.params.id);
   if (!user) return res.status(404).json({ error: "User tidak ditemukan" });
-  const { name, phone, address } = req.body;
-  if (phone && phone !== user.phone && findUserByPhone(phone)) {
-    return res.status(409).json({ error: "Nomor HP sudah dipakai user lain" });
-  }
+  const { name, phone, address, password } = req.body;
   if (name) user.name = name;
-  if (phone) user.phone = phone;
+  if (phone !== undefined) user.phone = phone;
   if (address !== undefined) user.address = address;
-  res.json(user);
+  if (password) {
+    if (String(password).length < 6) return res.status(400).json({ error: "Password minimal 6 karakter" });
+    user.password = password;
+  }
+  res.json(sanitize(user));
 });
 
 /* ====================
@@ -227,5 +245,5 @@ app.patch("/api/bookings/:id/status", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🏠 Roomly API berjalan di http://localhost:${PORT}`);
-  console.log(`👤 Admin default — phone: 0800000000`);
+  console.log(`👤 Admin default — username: admin / password: admin123`);
 });
