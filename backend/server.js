@@ -5,7 +5,19 @@ import nodemailer from "nodemailer";
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL  // akan di-set di Render dashboard
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.some(o => origin.startsWith(o))) cb(null, true);
+    else cb(new Error("CORS blocked"));
+  }
+}));
+
 app.use(express.json({ limit: "10mb" }));
 
 let mailer = null;
