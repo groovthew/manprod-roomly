@@ -2,15 +2,24 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api, formatRupiah, formatDateTime } from "../api.js";
 
-const TRACKING_STEPS = [
-  { key: "Diterima", label: "Diterima", icon: "📥", desc: "Pesanan masuk ke sistem" },
-  { key: "Dikonfirmasi", label: "Dikonfirmasi", icon: "✅", desc: "Pesanan dikonfirmasi admin" },
-  { key: "Diproses", label: "Diproses", icon: "⚙️", desc: "Tim sedang mengerjakan" },
-  { key: "Selesai", label: "Selesai", icon: "🎉", desc: "Pesanan selesai" }
-];
+const STEPS_BY_TYPE = {
+  laundry: [
+    { key: "Diterima", label: "Diterima", icon: "📥", desc: "Pesanan masuk ke sistem" },
+    { key: "Dikonfirmasi", label: "Dikonfirmasi", icon: "✅", desc: "Pesanan dikonfirmasi admin" },
+    { key: "Dijemput", label: "Dijemput Driver", icon: "🚚", desc: "Driver menjemput pakaian dari rumah Anda" },
+    { key: "Diproses", label: "Diproses", icon: "🧼", desc: "Pakaian sedang dicuci & disetrika" },
+    { key: "Diantar", label: "Diantar Driver", icon: "📦", desc: "Driver mengantar pesanan kembali" },
+    { key: "Selesai", label: "Selesai", icon: "🎉", desc: "Pesanan diterima pelanggan" }
+  ],
+  cleaning: [
+    { key: "Diterima", label: "Diterima", icon: "📥", desc: "Pesanan masuk ke sistem" },
+    { key: "Dikonfirmasi", label: "Dikonfirmasi", icon: "✅", desc: "Pesanan dikonfirmasi admin" },
+    { key: "Diproses", label: "Diproses", icon: "🧹", desc: "Tim sedang mengerjakan di lokasi" },
+    { key: "Selesai", label: "Selesai", icon: "🎉", desc: "Pesanan selesai" }
+  ]
+};
 
 const findEntry = (timeline, status) => timeline.find((t) => t.status === status);
-const stepIndex = (status) => TRACKING_STEPS.findIndex((s) => s.key === status);
 
 export default function Tracking() {
   const { id } = useParams();
@@ -46,8 +55,11 @@ export default function Tracking() {
 
   if (!booking) return <div className="empty">Memuat tracking...</div>;
 
+  const steps = STEPS_BY_TYPE[booking.type] || [];
   const cancelled = booking.status === "Dibatalkan";
-  const currentIdx = cancelled ? -1 : stepIndex(booking.status);
+  const currentIdx = cancelled ? -1 : steps.findIndex((s) => s.key === booking.status);
+  const isLaundry = booking.type === "laundry";
+  const driverActive = booking.status === "Dijemput" || booking.status === "Diantar";
 
   return (
     <div className="tracking-page">
@@ -64,7 +76,7 @@ export default function Tracking() {
 
       <div className="tracking-summary">
         <div>
-          <span className="booking-type">{booking.type === "laundry" ? "🧺 Laundry" : "🧹 Cleaning"}</span>
+          <span className="booking-type">{isLaundry ? "🧺 Laundry" : "🧹 Cleaning"}</span>
           <h2>{booking.service.name}</h2>
           <p className="muted">{booking.customerName} · {booking.phone}</p>
           <p className="muted">📍 {booking.address}</p>
@@ -75,6 +87,28 @@ export default function Tracking() {
         </div>
       </div>
 
+      {isLaundry && booking.driver && (
+        <div className={`driver-card ${driverActive ? "active" : ""}`}>
+          <div className="driver-avatar">🛵</div>
+          <div className="driver-info">
+            <div className="driver-label">
+              {booking.status === "Dijemput" && <span className="driver-status pickup">🚚 Sedang Menjemput</span>}
+              {booking.status === "Diantar" && <span className="driver-status deliver">📦 Sedang Mengantar</span>}
+              {!driverActive && <span className="driver-status">🛵 Driver Ditugaskan</span>}
+            </div>
+            <h3>{booking.driver.name}</h3>
+            <p>📞 <a href={`tel:${booking.driver.phone}`}>{booking.driver.phone}</a></p>
+            {booking.driver.vehicle && <p className="muted">🚗 {booking.driver.vehicle}</p>}
+          </div>
+        </div>
+      )}
+
+      {isLaundry && !booking.driver && !cancelled && (
+        <div className="driver-pending">
+          🛵 Driver belum ditugaskan untuk pesanan ini
+        </div>
+      )}
+
       {cancelled ? (
         <div className="cancelled-banner">
           <h3>❌ Pesanan Dibatalkan</h3>
@@ -84,20 +118,24 @@ export default function Tracking() {
         </div>
       ) : (
         <div className="tracking-stepper">
-          {TRACKING_STEPS.map((step, idx) => {
+          {steps.map((step, idx) => {
             const entry = findEntry(booking.timeline, step.key);
             const reached = idx <= currentIdx;
             const active = idx === currentIdx;
+            const isDriverStep = step.key === "Dijemput" || step.key === "Diantar";
             return (
               <div key={step.key} className={`step ${reached ? "reached" : ""} ${active ? "active" : ""}`}>
                 <div className="step-icon">{reached ? "✓" : step.icon}</div>
                 <div className="step-content">
                   <h4>{step.label}</h4>
                   <p className="step-desc">{step.desc}</p>
+                  {isDriverStep && booking.driver && (active || reached) && (
+                    <p className="step-driver">👤 {booking.driver.name} · {booking.driver.phone}</p>
+                  )}
                   {entry && <p className="step-time">{formatDateTime(entry.timestamp)}</p>}
                   {!entry && <p className="step-time muted">Menunggu...</p>}
                 </div>
-                {idx < TRACKING_STEPS.length - 1 && <div className="step-line" />}
+                {idx < steps.length - 1 && <div className="step-line" />}
               </div>
             );
           })}

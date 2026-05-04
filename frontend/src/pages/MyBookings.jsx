@@ -7,7 +7,9 @@ const statusClass = (s) =>
   ({
     "Diterima": "status-pending",
     "Dikonfirmasi": "status-confirmed",
+    "Dijemput": "status-driver",
     "Diproses": "status-processing",
+    "Diantar": "status-driver",
     "Selesai": "status-done",
     "Dibatalkan": "status-cancelled"
   }[s] || "");
@@ -76,6 +78,9 @@ export default function MyBookings() {
                   <span>📅 Jadwal: {booking.scheduleDate} pukul {booking.scheduleTime}</span>
                 )}
                 <span>📍 {booking.address}</span>
+                {booking.type === "laundry" && booking.driver && (
+                  <span className="driver-tag">🛵 Driver: <strong>{booking.driver.name}</strong> · {booking.driver.phone}</span>
+                )}
                 {booking.notes && <span>📝 {booking.notes}</span>}
                 <span className="muted">Dipesan {formatDateTime(booking.createdAt)}</span>
               </div>

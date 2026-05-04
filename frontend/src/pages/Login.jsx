@@ -6,6 +6,7 @@ const initialForm = {
   username: "",
   password: "",
   name: "",
+  email: "",
   phone: "",
   address: "",
   role: "user"
@@ -97,6 +98,17 @@ export default function Login() {
               <label>
                 Nama Lengkap
                 <input name="name" value={form.name} onChange={handleChange} placeholder="Budi Santoso" required />
+              </label>
+
+              <label>
+                Email
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="nama@email.com (untuk receipt otomatis)"
+                />
               </label>
 
               <label>

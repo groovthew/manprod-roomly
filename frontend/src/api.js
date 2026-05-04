@@ -1,4 +1,4 @@
-const API_BASE = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -30,7 +30,13 @@ export const api = {
   getUserBookings: (userId) => request(`/bookings/user/${userId}`),
   getBooking: (id) => request(`/bookings/${id}`),
   updateStatus: (id, status, note) =>
-    request(`/bookings/${id}/status`, { method: "PATCH", body: JSON.stringify({ status, note }) })
+    request(`/bookings/${id}/status`, { method: "PATCH", body: JSON.stringify({ status, note }) }),
+  assignDriver: (id, driver) =>
+    request(`/bookings/${id}/driver`, { method: "PATCH", body: JSON.stringify(driver) }),
+  setPayment: (id, method) =>
+    request(`/bookings/${id}/payment`, { method: "PATCH", body: JSON.stringify({ method }) }),
+  emailReceipt: (id, pdfBase64) =>
+    request(`/bookings/${id}/email-receipt`, { method: "POST", body: JSON.stringify({ pdfBase64 }) })
 };
 
 export const formatRupiah = (amount) =>

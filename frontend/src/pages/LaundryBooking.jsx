@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, formatRupiah } from "../api.js";
 import { useAuth } from "../auth.jsx";
+import ServiceCarousel from "../components/ServiceCarousel.jsx";
 
 const initialForm = { serviceId: "", quantity: 1, pickupDate: "", notes: "" };
 
@@ -36,11 +37,10 @@ export default function LaundryBooking() {
     setSuccess(null);
     try {
       const booking = await api.createLaundryBooking({ ...form, userId: user.id });
-      setSuccess(booking);
       setForm(initialForm);
+      navigate(`/payment/${booking.id}`);
     } catch (err) {
       setError(err.message);
-    } finally {
       setLoading(false);
     }
   };
@@ -68,26 +68,13 @@ export default function LaundryBooking() {
       )}
 
       <div className="booking-layout">
-        <div className="services-list">
-          <h2>Pilih Layanan</h2>
-          {services.map((service) => (
-            <button
-              key={service.id}
-              type="button"
-              className={`service-option ${form.serviceId === service.id ? "selected" : ""}`}
-              onClick={() => setForm((p) => ({ ...p, serviceId: service.id }))}
-            >
-              <div className="service-option-icon">{service.icon}</div>
-              <div className="service-option-info">
-                <h3>{service.name}</h3>
-                <p className="duration">⏱ {service.duration}</p>
-              </div>
-              <div className="service-option-price">
-                {formatRupiah(service.price)}
-                <span>/{service.unit}</span>
-              </div>
-            </button>
-          ))}
+        <div className="services-section">
+          <h2 className="section-heading">Pilih Layanan Laundry</h2>
+          <ServiceCarousel
+            services={services}
+            selectedId={form.serviceId}
+            onSelect={(id) => setForm((p) => ({ ...p, serviceId: id }))}
+          />
         </div>
 
         <form className="booking-form" onSubmit={handleSubmit}>
@@ -141,21 +128,13 @@ export default function LaundryBooking() {
           )}
 
           {error && <div className="alert error">⚠️ {error}</div>}
-          {success && (
-            <div className="alert success">
-              ✅ Booking berhasil! ID: <strong>{success.id}</strong>{" "}
-              <button type="button" className="link-btn" onClick={() => navigate(`/tracking/${success.id}`)}>
-                Lihat tracking →
-              </button>
-            </div>
-          )}
 
           <button
             type="submit"
             className="btn btn-primary btn-block"
             disabled={loading || !form.serviceId || profileIncomplete}
           >
-            {loading ? "Memproses..." : "Konfirmasi Pesanan"}
+            {loading ? "Memproses..." : "Konfirmasi & Lanjut Pembayaran →"}
           </button>
         </form>
       </div>

@@ -3,7 +3,12 @@ import { useAuth } from "../auth.jsx";
 
 export default function Profile() {
   const { user, updateProfile, logout } = useAuth();
-  const [form, setForm] = useState({ name: user.name, phone: user.phone, address: user.address });
+  const [form, setForm] = useState({
+    name: user.name,
+    email: user.email || "",
+    phone: user.phone,
+    address: user.address
+  });
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -71,7 +76,7 @@ export default function Profile() {
         <div className="profile-avatar">{user.name.charAt(0).toUpperCase()}</div>
         <div className="profile-meta">
           <h2>{user.name}</h2>
-          <p className="muted">@{user.username}</p>
+          <p className="muted">@{user.username}{user.email ? ` · ${user.email}` : ""}</p>
           <span className={`role-badge ${user.role}`}>{user.role === "admin" ? "🛡️ Admin" : "👤 Pelanggan"}</span>
         </div>
       </div>
@@ -87,6 +92,11 @@ export default function Profile() {
         <label>
           Nama Lengkap
           <input name="name" value={form.name} onChange={handleChange} disabled={!editing} required />
+        </label>
+
+        <label>
+          Email <span className="muted" style={{ fontWeight: 400, fontSize: "0.8rem" }}>(untuk receipt otomatis)</span>
+          <input name="email" type="email" value={form.email} onChange={handleChange} disabled={!editing} placeholder="nama@email.com" />
         </label>
 
         <label>
@@ -115,7 +125,11 @@ export default function Profile() {
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => { setEditing(false); setForm({ name: user.name, phone: user.phone, address: user.address }); setError(null); }}
+                onClick={() => {
+                  setEditing(false);
+                  setForm({ name: user.name, email: user.email || "", phone: user.phone, address: user.address });
+                  setError(null);
+                }}
               >
                 Batal
               </button>

@@ -6,6 +6,7 @@ import LaundryBooking from "./pages/LaundryBooking.jsx";
 import CleaningBooking from "./pages/CleaningBooking.jsx";
 import MyBookings from "./pages/MyBookings.jsx";
 import Tracking from "./pages/Tracking.jsx";
+import Payment from "./pages/Payment.jsx";
 import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
@@ -94,6 +95,7 @@ function Shell() {
             <Route path="/cleaning" element={<RequireAuth><CleaningBooking /></RequireAuth>} />
             <Route path="/my-bookings" element={<RequireAuth><MyBookings /></RequireAuth>} />
             <Route path="/tracking/:id" element={<RequireAuth><Tracking /></RequireAuth>} />
+            <Route path="/payment/:id" element={<RequireAuth><Payment /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/admin" element={<RequireAuth role="admin"><AdminDashboard /></RequireAuth>} />
             <Route path="*" element={<Navigate to="/" replace />} />
