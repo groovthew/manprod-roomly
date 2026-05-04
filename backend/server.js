@@ -521,6 +521,38 @@ app.post("/api/bookings/:id/email-receipt", async (req, res) => {
   }
 });
 
+/* ====================
+   Chat Messages
+   ==================== */
+app.get("/api/bookings/:id/messages", (req, res) => {
+  const booking = findBookingById(req.params.id);
+  if (!booking) return res.status(404).json({ error: "Booking tidak ditemukan" });
+  res.json(booking.messages || []);
+});
+
+app.post("/api/bookings/:id/messages", (req, res) => {
+  const { senderId, senderName, senderRole, text, image } = req.body;
+  if (!senderId || !senderName) return res.status(400).json({ error: "Pengirim wajib diisi" });
+  if (!text && !image) return res.status(400).json({ error: "Pesan atau foto wajib diisi" });
+
+  const booking = findBookingById(req.params.id);
+  if (!booking) return res.status(404).json({ error: "Booking tidak ditemukan" });
+
+  if (!booking.messages) booking.messages = [];
+
+  const message = {
+    id: generateId("MSG"),
+    senderId,
+    senderName,
+    senderRole: senderRole || "user",
+    text: text || "",
+    image: image || null,
+    createdAt: new Date().toISOString()
+  };
+  booking.messages.push(message);
+  res.status(201).json(message);
+});
+
 app.listen(PORT, async () => {
   console.log(`🏠 Roomly API berjalan di http://localhost:${PORT}`);
   console.log(`👤 Admin default — username: admin / password: admin123`);

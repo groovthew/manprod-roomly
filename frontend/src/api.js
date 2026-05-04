@@ -36,7 +36,11 @@ export const api = {
   setPayment: (id, method) =>
     request(`/bookings/${id}/payment`, { method: "PATCH", body: JSON.stringify({ method }) }),
   emailReceipt: (id, pdfBase64) =>
-    request(`/bookings/${id}/email-receipt`, { method: "POST", body: JSON.stringify({ pdfBase64 }) })
+    request(`/bookings/${id}/email-receipt`, { method: "POST", body: JSON.stringify({ pdfBase64 }) }),
+
+  getMessages: (bookingId) => request(`/bookings/${bookingId}/messages`),
+  sendMessage: (bookingId, payload) =>
+    request(`/bookings/${bookingId}/messages`, { method: "POST", body: JSON.stringify(payload) })
 };
 
 export const formatRupiah = (amount) =>
