@@ -1,6 +1,5 @@
 /* =====================================================
    Roomly API — Offline / localStorage mode
-   Tidak butuh backend. Semua data disimpan di browser.
    Catatan: data per-device (tidak sync antar browser).
    ===================================================== */
 

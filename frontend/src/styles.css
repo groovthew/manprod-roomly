@@ -238,7 +238,7 @@ body {
 }
 
 .btn-ghost-modern {
-  display: inline-flex; align-items: center; gap: 0.4rem;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
   padding: 0.85rem 1.5rem;
   border: 2px solid var(--border);
   border-radius: 10px;
@@ -248,6 +248,7 @@ body {
   background: white;
   transition: all 0.2s;
   font-size: 1rem;
+  text-align: center;
 }
 .btn-ghost-modern:hover {
   border-color: #06b6d4;
