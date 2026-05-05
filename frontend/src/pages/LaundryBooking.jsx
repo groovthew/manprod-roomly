@@ -49,9 +49,17 @@ export default function LaundryBooking() {
 
   return (
     <div className="booking-page">
-      <div className="page-header">
-        <h1>🧺 Booking Laundry Service</h1>
-        <p>Pilih jenis layanan dan jadwal penjemputan. Identitas otomatis dari profil Anda.</p>
+      <div className="booking-hero">
+        <div className="booking-hero-content">
+          <div className="booking-hero-text">
+            <span className="booking-hero-badge">🚚 Pickup &amp; Delivery Gratis</span>
+            <h1>
+              Laundry <span className="accent">Cepat</span> &amp; <span className="accent">Hemat</span> Sampai Depan Pintu
+            </h1>
+            <p>Pilih layanan, atur jadwal penjemputan, driver kami yang urus sisanya.</p>
+          </div>
+          <div className="booking-hero-icon">🧺</div>
+        </div>
       </div>
 
       <div className="profile-banner">

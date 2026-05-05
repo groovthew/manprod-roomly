@@ -50,9 +50,17 @@ export default function CleaningBooking() {
 
   return (
     <div className="booking-page">
-      <div className="page-header">
-        <h1>🧹 Booking Cleaning Service</h1>
-        <p>Pilih jenis cleaning dan tentukan jadwal kunjungan tim kami.</p>
+      <div className="booking-hero">
+        <div className="booking-hero-content">
+          <div className="booking-hero-text">
+            <span className="booking-hero-badge">✨ Layanan Cleaning Profesional</span>
+            <h1>
+              Rumah <span className="accent">Bersih</span> &amp; <span className="accent">Rapi</span> Tanpa Repot
+            </h1>
+            <p>Pilih jenis cleaning, tentukan jadwal, dan biarkan tim kami yang bekerja.</p>
+          </div>
+          <div className="booking-hero-icon">🧹</div>
+        </div>
       </div>
 
       <div className="profile-banner">

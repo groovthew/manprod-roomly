@@ -13,7 +13,7 @@ export default function Home() {
           <span className="hero-badge">⭐ No.1 Laundry & Cleaning di Indonesia</span>
           <h1>
             Solusi <span className="hero-accent">Bersih</span> &
-            <span className="hero-accent"> Praktis</span> untuk Rumahmu
+            <span className="hero-accent">  Praktis </span> untuk Rumahmu
           </h1>
           <p className="hero-subtitle">
             Pesan laundry & cleaning dalam satu klik. Driver profesional, harga transparan,
