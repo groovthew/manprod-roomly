@@ -40,7 +40,7 @@ function Shell() {
       {!isAdmin && <NavLink to="/laundry">Laundry</NavLink>}
       {!isAdmin && <NavLink to="/cleaning">Cleaning</NavLink>}
       {user && !isAdmin && <NavLink to="/my-bookings">Pesanan Saya</NavLink>}
-      {isAdmin && <NavLink to="/admin">Admin</NavLink>}
+      {isAdmin && <NavLink to="/admin" end>Admin</NavLink>}
       {isAdmin && <NavLink to="/admin/chat">Chat</NavLink>}
     </>
   );
@@ -81,7 +81,7 @@ function Shell() {
         {!isAdmin && <NavLink to="/laundry">🧺 Laundry</NavLink>}
         {!isAdmin && <NavLink to="/cleaning">🧹 Cleaning</NavLink>}
         {user && !isAdmin && <NavLink to="/my-bookings">📋 Pesanan Saya</NavLink>}
-        {isAdmin && <NavLink to="/admin">🛡️ Admin</NavLink>}
+        {isAdmin && <NavLink to="/admin" end>🛡️ Admin</NavLink>}
         {isAdmin && <NavLink to="/admin/chat">💬 Chat</NavLink>}
         {user && <NavLink to="/profile">👤 Profil</NavLink>}
         {!user && <NavLink to="/login">🔐 Masuk / Daftar</NavLink>}
