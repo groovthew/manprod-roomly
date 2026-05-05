@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, formatRupiah, formatDateTime } from "../api.js";
 import { useAuth } from "../auth.jsx";
-import ChatBox from "../components/ChatBox.jsx";
 
 const statusClass = (s) =>
   ({
@@ -20,7 +19,6 @@ export default function MyBookings() {
   const [bookings, setBookings] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [openChat, setOpenChat] = useState(null);
 
   useEffect(() => {
     api.getUserBookings(user.id)
@@ -93,21 +91,9 @@ export default function MyBookings() {
               </div>
             </div>
 
-            <div className="booking-card-actions">
-              <Link to={`/tracking/${booking.id}`} className="btn btn-primary btn-block">
-                📍 Lihat Live Tracking
-              </Link>
-              <button
-                className="btn btn-secondary btn-block"
-                onClick={() => setOpenChat(openChat === booking.id ? null : booking.id)}
-              >
-                💬 {openChat === booking.id ? "Tutup Chat" : "Chat Admin"}
-              </button>
-            </div>
-
-            {openChat === booking.id && (
-              <ChatBox bookingId={booking.id} onClose={() => setOpenChat(null)} />
-            )}
+            <Link to={`/tracking/${booking.id}`} className="btn btn-primary btn-block">
+              📍 Lihat Live Tracking
+            </Link>
           </div>
         ))}
       </div>

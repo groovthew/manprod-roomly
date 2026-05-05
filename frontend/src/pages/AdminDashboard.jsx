@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { api, formatRupiah, formatDateTime } from "../api.js";
-import ChatBox from "../components/ChatBox.jsx";
 
 const STATUS_FLOW = {
   laundry: ["Diterima", "Dikonfirmasi", "Dijemput", "Diproses", "Diantar", "Selesai", "Dibatalkan"],
@@ -80,7 +79,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedDriver, setExpandedDriver] = useState(null);
-  const [openChat, setOpenChat] = useState(null);
 
   const load = useCallback(async () => {
     try {
@@ -213,18 +211,7 @@ export default function AdminDashboard() {
                 )}
 
                 <Link to={`/tracking/${booking.id}`} className="btn btn-secondary btn-sm">📍 Lihat Tracking</Link>
-                <button
-                  type="button"
-                  className="btn btn-secondary btn-sm"
-                  onClick={() => setOpenChat(openChat === booking.id ? null : booking.id)}
-                >
-                  💬 {openChat === booking.id ? "Tutup Chat" : "Chat Customer"}
-                </button>
               </div>
-
-              {openChat === booking.id && (
-                <ChatBox bookingId={booking.id} onClose={() => setOpenChat(null)} />
-              )}
             </div>
           );
         })}

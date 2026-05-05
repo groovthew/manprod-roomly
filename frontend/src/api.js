@@ -7,7 +7,8 @@
 const STORAGE = {
   users: "roomly:users",
   laundry: "roomly:laundryBookings",
-  cleaning: "roomly:cleaningBookings"
+  cleaning: "roomly:cleaningBookings",
+  chats: "roomly:supportChats"
 };
 
 const LAUNDRY_SERVICES = [
@@ -357,19 +358,44 @@ export const api = {
     });
   },
 
-  /* ---------- Chat ---------- */
-  getMessages: async (bookingId) => {
-    const booking = findBookingById(bookingId);
-    if (!booking) return fail("Booking tidak ditemukan");
-    return ok(booking.messages || []);
+  /* ---------- Support Chat (Customer ↔ Admin) ---------- */
+  getSupportChat: async (userId) => {
+    const users = getUsers();
+    const user = users.find((u) => u.id === userId);
+    if (!user) return fail("User tidak ditemukan");
+    const chats = read(STORAGE.chats, {});
+    if (!chats[userId]) {
+      chats[userId] = {
+        userId,
+        userName: user.name,
+        messages: [],
+        lastMessageAt: new Date().toISOString()
+      };
+      write(STORAGE.chats, chats);
+    } else if (chats[userId].userName !== user.name) {
+      chats[userId].userName = user.name;
+      write(STORAGE.chats, chats);
+    }
+    return ok(chats[userId]);
   },
 
-  sendMessage: async (bookingId, { senderId, senderName, senderRole, text, image }) => {
+  sendSupportMessage: async (targetUserId, { senderId, senderName, senderRole, text, image }) => {
     if (!senderId || !senderName) return fail("Pengirim wajib diisi");
     if (!text && !image) return fail("Pesan atau foto wajib diisi");
-    const booking = findBookingById(bookingId);
-    if (!booking) return fail("Booking tidak ditemukan");
-    if (!booking.messages) booking.messages = [];
+
+    const users = getUsers();
+    const targetUser = users.find((u) => u.id === targetUserId);
+    if (!targetUser) return fail("User tidak ditemukan");
+
+    const chats = read(STORAGE.chats, {});
+    if (!chats[targetUserId]) {
+      chats[targetUserId] = {
+        userId: targetUserId,
+        userName: targetUser.name,
+        messages: [],
+        lastMessageAt: new Date().toISOString()
+      };
+    }
 
     const message = {
       id: generateId("MSG"),
@@ -380,9 +406,18 @@ export const api = {
       image: image || null,
       createdAt: new Date().toISOString()
     };
-    booking.messages.push(message);
-    saveBooking(booking);
+    chats[targetUserId].messages.push(message);
+    chats[targetUserId].lastMessageAt = message.createdAt;
+    write(STORAGE.chats, chats);
     return ok(message);
+  },
+
+  getAllSupportChats: async () => {
+    const chats = read(STORAGE.chats, {});
+    const list = Object.values(chats).sort(
+      (a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt)
+    );
+    return ok(list);
   }
 };
 

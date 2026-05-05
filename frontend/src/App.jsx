@@ -10,6 +10,8 @@ import Payment from "./pages/Payment.jsx";
 import Login from "./pages/Login.jsx";
 import Profile from "./pages/Profile.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
+import AdminChat from "./pages/AdminChat.jsx";
+import FloatingChat from "./components/FloatingChat.jsx";
 
 function RequireAuth({ children, role }) {
   const { user, loading } = useAuth();
@@ -39,6 +41,7 @@ function Shell() {
       {!isAdmin && <NavLink to="/cleaning">Cleaning</NavLink>}
       {user && !isAdmin && <NavLink to="/my-bookings">Pesanan Saya</NavLink>}
       {isAdmin && <NavLink to="/admin">Admin</NavLink>}
+      {isAdmin && <NavLink to="/admin/chat">Chat</NavLink>}
     </>
   );
 
@@ -79,6 +82,7 @@ function Shell() {
         {!isAdmin && <NavLink to="/cleaning">🧹 Cleaning</NavLink>}
         {user && !isAdmin && <NavLink to="/my-bookings">📋 Pesanan Saya</NavLink>}
         {isAdmin && <NavLink to="/admin">🛡️ Admin</NavLink>}
+        {isAdmin && <NavLink to="/admin/chat">💬 Chat</NavLink>}
         {user && <NavLink to="/profile">👤 Profil</NavLink>}
         {!user && <NavLink to="/login">🔐 Masuk / Daftar</NavLink>}
         {user && <button className="mobile-logout" onClick={logout}>🚪 Logout</button>}
@@ -98,6 +102,7 @@ function Shell() {
             <Route path="/payment/:id" element={<RequireAuth><Payment /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/admin" element={<RequireAuth role="admin"><AdminDashboard /></RequireAuth>} />
+            <Route path="/admin/chat" element={<RequireAuth role="admin"><AdminChat /></RequireAuth>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}
@@ -106,6 +111,8 @@ function Shell() {
       <footer className="footer">
         <p>© 2026 Roomly — Solusi Laundry &amp; Cleaning untuk Rumah Anda</p>
       </footer>
+
+      <FloatingChat />
     </div>
   );
 }
