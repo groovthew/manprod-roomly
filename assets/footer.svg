@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="footerBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0891b2">
+        <animate attributeName="stop-color" values="#0891b2;#06b6d4;#0891b2" dur="6s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#22d3ee">
+        <animate attributeName="stop-color" values="#22d3ee;#06b6d4;#22d3ee" dur="6s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+  </defs>
+
+  <!-- Background gradient -->
+  <rect width="1200" height="140" fill="url(#footerBg)"/>
+
+  <!-- Top animated wave -->
+  <path fill="rgba(255,255,255,0.2)">
+    <animate attributeName="d" values="
+      M 0 30 Q 300 10, 600 30 T 1200 30 L 1200 0 L 0 0 Z;
+      M 0 30 Q 300 50, 600 30 T 1200 30 L 1200 0 L 0 0 Z;
+      M 0 30 Q 300 10, 600 30 T 1200 30 L 1200 0 L 0 0 Z
+    " dur="6s" repeatCount="indefinite"/>
+  </path>
+
+  <!-- Floating bubbles -->
+  <circle cx="180" cy="80" r="6" fill="rgba(255,255,255,0.5)">
+    <animate attributeName="cy" values="80;65;80" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1020" cy="95" r="8" fill="rgba(255,255,255,0.45)">
+    <animate attributeName="cy" values="95;78;95" dur="5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Footer text -->
+  <text x="600" y="90" text-anchor="middle" fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="20" font-weight="700">Made with ❤️ by Mattheuw</text>
+  <text x="600" y="115" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13" font-weight="400" letter-spacing="1">© 2026 ROOMLY • LAUNDRY &amp; CLEANING SERVICE</text>
+</svg>

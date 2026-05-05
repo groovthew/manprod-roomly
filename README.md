@@ -1,6 +1,6 @@
-<!-- Animated cyan-themed banner -->
+<!-- Animated cyan-themed banner (self-hosted SVG) -->
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:22d3ee,50:06b6d4,100:0891b2&height=220&section=header&text=Roomly&fontSize=88&fontColor=ffffff&fontAlignY=38&desc=Laundry%20%26%20Cleaning%20Service%20App&descAlignY=62&descSize=20&animation=fadeIn" alt="Roomly Banner" />
+  <img src="./assets/banner.svg" alt="Roomly Banner" width="100%" />
 </p>
 
 <!-- Typing animation tagline -->
@@ -262,24 +262,9 @@ npm run dev          # http://localhost:5173
 
 <br/>
 
-## ☁️ Deploy ke Vercel
-
-<details>
-<summary><b>📘 Panduan singkat (klik untuk expand)</b></summary>
-
-1. Push repo ke GitHub
-2. Buka [vercel.com](https://vercel.com) → **Import Project** → pilih repo
-3. Set **Root Directory**: `frontend`
-4. **Framework Preset**: Vite (auto-detect)
-5. **Deploy** — selesai! Update otomatis tiap `git push`
-
-</details>
-
-<br/>
-
-<!-- Bottom waving capsule -->
+<!-- Animated footer (self-hosted SVG) -->
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0891b2,50:06b6d4,100:22d3ee&height=130&section=footer&text=Made%20with%20%E2%9D%A4%EF%B8%8F%20by%20Mattheuw&fontSize=18&fontColor=ffffff&fontAlignY=70&animation=fadeIn" alt="Footer" />
+  <img src="./assets/footer.svg" alt="Made with love by groovthew" width="100%" />
 </p>
 
 <p align="center">

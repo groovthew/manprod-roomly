@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee">
+        <animate attributeName="stop-color" values="#22d3ee;#06b6d4;#22d3ee" dur="6s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#06b6d4">
+        <animate attributeName="stop-color" values="#06b6d4;#0891b2;#06b6d4" dur="6s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#0891b2">
+        <animate attributeName="stop-color" values="#0891b2;#0e7490;#0891b2" dur="6s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    <linearGradient id="overlay" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.18)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="280" fill="url(#bg)"/>
+  <rect width="1200" height="280" fill="url(#overlay)"/>
+
+  <!-- Floating decorative bubbles -->
+  <circle cx="120" cy="60" r="22" fill="rgba(255,255,255,0.18)">
+    <animate attributeName="cy" values="60;42;60" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.18;0.32;0.18" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1080" cy="220" r="28" fill="rgba(255,255,255,0.2)">
+    <animate attributeName="cy" values="220;195;220" dur="5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="950" cy="70" r="14" fill="rgba(255,255,255,0.16)">
+    <animate attributeName="cy" values="70;55;70" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="200" cy="220" r="18" fill="rgba(255,255,255,0.14)">
+    <animate attributeName="cy" values="220;235;220" dur="4.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="1130" cy="100" r="10" fill="rgba(255,255,255,0.22)">
+    <animate attributeName="cy" values="100;115;100" dur="3s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Sparkles (text emoji) -->
+  <text x="220" y="105" font-size="36" opacity="0.7">✨</text>
+  <text x="940" y="180" font-size="32" opacity="0.65">✨</text>
+  <text x="1020" y="105" font-size="26" opacity="0.55">⭐</text>
+
+  <!-- Main title -->
+  <g>
+    <text x="600" y="135" text-anchor="middle" fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="84" font-weight="900" letter-spacing="-1">🏠 Roomly</text>
+    <text x="600" y="180" text-anchor="middle" fill="rgba(255,255,255,0.95)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="22" font-weight="500" letter-spacing="0.5">Laundry &amp; Cleaning Service App</text>
+    <text x="600" y="215" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="14" font-weight="400" letter-spacing="2">SOLUSI BERSIH • PRAKTIS • REAL-TIME</text>
+  </g>
+
+  <!-- Bottom animated wave -->
+  <path fill="rgba(255,255,255,0.18)">
+    <animate attributeName="d" values="
+      M 0 250 Q 300 235, 600 250 T 1200 250 L 1200 280 L 0 280 Z;
+      M 0 250 Q 300 270, 600 250 T 1200 250 L 1200 280 L 0 280 Z;
+      M 0 250 Q 300 235, 600 250 T 1200 250 L 1200 280 L 0 280 Z
+    " dur="6s" repeatCount="indefinite"/>
+  </path>
+</svg>
