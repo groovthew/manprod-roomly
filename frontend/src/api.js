@@ -6,43 +6,52 @@
 const STORAGE = {
   users: "roomly:users",
   laundry: "roomly:laundryBookings",
-  cleaning: "roomly:cleaningBookings",
-  chats: "roomly:supportChats"
+  cleaning: "roomly:cleaningBookings"
 };
 
 const LAUNDRY_SERVICES = [
   { id: "L1", name: "Cuci Kering", price: 7000, unit: "kg", duration: "1 hari", icon: "👕",
     image: "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&h=300&fit=crop",
+    tag: "💰 Hemat", bestFor: "Pakaian harian",
     description: "Pakaian dicuci bersih dan dikeringkan, siap dikenakan." },
   { id: "L2", name: "Cuci + Setrika", price: 10000, unit: "kg", duration: "2 hari", icon: "🧺",
     image: "https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?w=400&h=300&fit=crop",
+    tag: "⭐ Terpopuler", bestFor: "Pakaian kerja & seragam",
     description: "Cuci bersih plus disetrika rapi dan dilipat." },
   { id: "L3", name: "Setrika Saja", price: 5000, unit: "kg", duration: "1 hari", icon: "🔥",
     image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400&h=300&fit=crop",
+    tag: "✋ Praktis", bestFor: "Baju sudah dicuci sendiri",
     description: "Pakaian sudah bersih, kami setrika dan lipat rapi." },
   { id: "L4", name: "Express (6 jam)", price: 15000, unit: "kg", duration: "6 jam", icon: "⚡",
     image: "https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=400&h=300&fit=crop",
+    tag: "⚡ Tercepat", bestFor: "Butuh cepat / darurat",
     description: "Cuci + setrika selesai dalam 6 jam. Cocok untuk kondisi darurat." },
   { id: "L5", name: "Dry Clean", price: 25000, unit: "pcs", duration: "3 hari", icon: "✨",
     image: "https://images.unsplash.com/photo-1469504512102-900f29606341?w=400&h=300&fit=crop",
+    tag: "👑 Premium", bestFor: "Jas, gaun, bahan halus",
     description: "Untuk pakaian khusus seperti jas, gaun, atau bahan halus." }
 ];
 
 const CLEANING_SERVICES = [
   { id: "C1", name: "Cleaning Standar", price: 75000, unit: "sesi", duration: "2 jam", icon: "🧹",
     image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&h=300&fit=crop",
+    tag: "⭐ Terpopuler", bestFor: "Perawatan rutin",
     description: "Sapu, pel, lap permukaan, dan rapikan ruangan utama." },
   { id: "C2", name: "Deep Cleaning", price: 200000, unit: "sesi", duration: "5 jam", icon: "🧽",
     image: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?w=400&h=300&fit=crop",
+    tag: "✨ Menyeluruh", bestFor: "Bersih maksimal",
     description: "Pembersihan mendalam termasuk noda membandel dan area sulit." },
   { id: "C3", name: "Cleaning Kamar Mandi", price: 50000, unit: "sesi", duration: "1 jam", icon: "🚿",
     image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&h=300&fit=crop",
+    tag: "🎯 Spesifik", bestFor: "Kerak & lumut",
     description: "Khusus kamar mandi: kerak, lumut, dan sanitasi menyeluruh." },
   { id: "C4", name: "Cleaning Dapur", price: 80000, unit: "sesi", duration: "2 jam", icon: "🍳",
     image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop",
+    tag: "🎯 Spesifik", bestFor: "Minyak & kompor",
     description: "Bersihkan kompor, sink, lemari, dan minyak yang menempel." },
   { id: "C5", name: "Cleaning Pasca Renovasi", price: 350000, unit: "sesi", duration: "8 jam", icon: "🔨",
     image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=300&fit=crop",
+    tag: "🏗️ Berat", bestFor: "Sisa debu & material",
     description: "Bersihkan debu, sisa material, dan sanitasi pasca proyek." }
 ];
 
@@ -355,68 +364,6 @@ export const api = {
       previewUrl: null,
       note: "Mode offline: receipt PDF sudah otomatis di-download. Email tidak dikirim."
     });
-  },
-
-  /* ---------- Support Chat (Customer ↔ Admin) ---------- */
-  getSupportChat: async (userId) => {
-    const users = getUsers();
-    const user = users.find((u) => u.id === userId);
-    if (!user) return fail("User tidak ditemukan");
-    const chats = read(STORAGE.chats, {});
-    if (!chats[userId]) {
-      chats[userId] = {
-        userId,
-        userName: user.name,
-        messages: [],
-        lastMessageAt: new Date().toISOString()
-      };
-      write(STORAGE.chats, chats);
-    } else if (chats[userId].userName !== user.name) {
-      chats[userId].userName = user.name;
-      write(STORAGE.chats, chats);
-    }
-    return ok(chats[userId]);
-  },
-
-  sendSupportMessage: async (targetUserId, { senderId, senderName, senderRole, text, image }) => {
-    if (!senderId || !senderName) return fail("Pengirim wajib diisi");
-    if (!text && !image) return fail("Pesan atau foto wajib diisi");
-
-    const users = getUsers();
-    const targetUser = users.find((u) => u.id === targetUserId);
-    if (!targetUser) return fail("User tidak ditemukan");
-
-    const chats = read(STORAGE.chats, {});
-    if (!chats[targetUserId]) {
-      chats[targetUserId] = {
-        userId: targetUserId,
-        userName: targetUser.name,
-        messages: [],
-        lastMessageAt: new Date().toISOString()
-      };
-    }
-
-    const message = {
-      id: generateId("MSG"),
-      senderId,
-      senderName,
-      senderRole: senderRole || "user",
-      text: text || "",
-      image: image || null,
-      createdAt: new Date().toISOString()
-    };
-    chats[targetUserId].messages.push(message);
-    chats[targetUserId].lastMessageAt = message.createdAt;
-    write(STORAGE.chats, chats);
-    return ok(message);
-  },
-
-  getAllSupportChats: async () => {
-    const chats = read(STORAGE.chats, {});
-    const list = Object.values(chats).sort(
-      (a, b) => new Date(b.lastMessageAt) - new Date(a.lastMessageAt)
-    );
-    return ok(list);
   }
 };
 

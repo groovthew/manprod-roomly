@@ -1,106 +1,128 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { api, formatDateTime } from "../api.js";
+import { useNavigate } from "react-router-dom";
+import { api } from "../api.js";
 import { useAuth } from "../auth.jsx";
+import { processMessage, createInitialState, welcomeMessage } from "../utils/chatbot.js";
+
+const uid = () => `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 
 export default function FloatingChat() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [text, setText] = useState("");
-  const [sending, setSending] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null);
-  const [imageBase64, setImageBase64] = useState(null);
-  const [viewImage, setViewImage] = useState(null);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const lastSeenRef = useRef(0);
+  const [botState, setBotState] = useState(createInitialState());
+  const [input, setInput] = useState("");
+  const [typing, setTyping] = useState(false);
   const endRef = useRef(null);
-  const fileRef = useRef(null);
 
   const isCustomer = user && user.role !== "admin";
+  const storeKey = user ? `roomly:botchat:${user.id}` : null;
 
-  const loadMessages = useCallback(async () => {
-    if (!isCustomer) return;
+  // Load persisted conversation (or seed welcome)
+  useEffect(() => {
+    if (!isCustomer || !storeKey) return;
     try {
-      const chat = await api.getSupportChat(user.id);
-      const msgs = chat.messages || [];
-      setMessages(msgs);
-      const unseenAdminMsgs = msgs.filter(
-        (m, i) => m.senderRole === "admin" && i >= lastSeenRef.current
-      ).length;
-      if (!open) setUnreadCount(unseenAdminMsgs);
+      const saved = JSON.parse(localStorage.getItem(storeKey) || "null");
+      if (saved && saved.messages?.length) {
+        setMessages(saved.messages);
+        setBotState(saved.botState || createInitialState());
+        return;
+      }
     } catch {}
-  }, [isCustomer, user, open]);
+    const w = welcomeMessage(user);
+    setMessages([{ id: uid(), sender: "bot", text: w.text, quickReplies: w.quickReplies }]);
+  }, [isCustomer, storeKey]); // eslint-disable-line
+
+  // Persist on change
+  useEffect(() => {
+    if (!storeKey || !messages.length) return;
+    localStorage.setItem(storeKey, JSON.stringify({ messages, botState }));
+  }, [messages, botState, storeKey]);
 
   useEffect(() => {
-    if (!isCustomer) return;
-    loadMessages();
-    const interval = setInterval(loadMessages, 3000);
-    return () => clearInterval(interval);
-  }, [loadMessages, isCustomer]);
+    if (open) endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, typing, open]);
 
-  useEffect(() => {
-    if (open) {
-      endRef.current?.scrollIntoView({ behavior: "smooth" });
-      lastSeenRef.current = messages.length;
-      setUnreadCount(0);
+  const send = useCallback(async (rawText) => {
+    const text = rawText.trim();
+    if (!text) return;
+
+    const userMsg = { id: uid(), sender: "user", text };
+    setMessages((m) => [...m, userMsg]);
+    setInput("");
+    setTyping(true);
+
+    let result;
+    try {
+      result = await processMessage(botState, text, { user, api });
+    } catch (err) {
+      result = {
+        messages: [{ text: "😔 Maaf, terjadi kesalahan. Coba lagi ya.", quickReplies: null }],
+        state: createInitialState()
+      };
     }
-  }, [messages, open]);
+
+    // simulate human-like typing delay
+    await new Promise((r) => setTimeout(r, 450));
+
+    setMessages((m) => [
+      ...m,
+      ...result.messages.map((bm) => ({
+        id: uid(), sender: "bot", text: bm.text, quickReplies: bm.quickReplies || null
+      }))
+    ]);
+    setBotState(result.state);
+    setTyping(false);
+
+    if (result.navigateTo) {
+      setTimeout(() => { setOpen(false); navigate(result.navigateTo); }, 1400);
+    }
+  }, [botState, user, navigate]);
+
+  const handleQuickReply = (qr) => {
+    if (qr.to) {
+      setOpen(false);
+      navigate(qr.to);
+      return;
+    }
+    send(qr.value || qr.label);
+  };
+
+  const handleRestart = () => {
+    const w = welcomeMessage(user);
+    const fresh = [{ id: uid(), sender: "bot", text: w.text, quickReplies: w.quickReplies }];
+    setMessages(fresh);
+    setBotState(createInitialState());
+  };
 
   if (!isCustomer) return null;
 
-  const handleImageSelect = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Ukuran foto maksimal 5MB");
-      return;
+  // quick replies only render on the LAST bot message
+  const lastBotIdx = (() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].sender === "bot") return i;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImagePreview(reader.result);
-      setImageBase64(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
+    return -1;
+  })();
 
-  const clearImage = () => {
-    setImagePreview(null);
-    setImageBase64(null);
-    if (fileRef.current) fileRef.current.value = "";
-  };
-
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!text.trim() && !imageBase64) return;
-    setSending(true);
-    try {
-      await api.sendSupportMessage(user.id, {
-        senderId: user.id,
-        senderName: user.name,
-        senderRole: user.role,
-        text: text.trim(),
-        image: imageBase64
-      });
-      setText("");
-      clearImage();
-      await loadMessages();
-    } catch (err) {
-      alert("Gagal mengirim: " + err.message);
-    } finally {
-      setSending(false);
-    }
-  };
+  const renderText = (text) =>
+    text.split("\n").map((line, i) => (
+      <span key={i}>
+        {line.split(/(\*[^*]+\*)/g).map((part, j) =>
+          part.startsWith("*") && part.endsWith("*") && part.length > 2
+            ? <strong key={j}>{part.slice(1, -1)}</strong>
+            : part
+        )}
+        {i < text.split("\n").length - 1 && <br />}
+      </span>
+    ));
 
   return (
     <>
       {!open && (
-        <button
-          className="fchat-launcher"
-          onClick={() => setOpen(true)}
-          aria-label="Buka chat support"
-        >
-          <span className="fchat-launcher-icon">💬</span>
-          {unreadCount > 0 && <span className="fchat-launcher-badge">{unreadCount}</span>}
+        <button className="fchat-launcher" onClick={() => setOpen(true)} aria-label="Buka RoomlyBot">
+          <span className="fchat-launcher-icon">🤖</span>
           <span className="fchat-launcher-pulse" />
         </button>
       )}
@@ -109,97 +131,62 @@ export default function FloatingChat() {
         <div className="fchat-panel">
           <div className="fchat-header">
             <div className="fchat-header-info">
-              <div className="fchat-avatar">🛡️</div>
+              <div className="fchat-avatar">🤖</div>
               <div>
-                <strong>Roomly Support</strong>
-                <span><span className="fchat-online" /> Online — siap membantu</span>
+                <strong>RoomlyBot</strong>
+                <span><span className="fchat-online" /> Asisten Virtual · Online</span>
               </div>
             </div>
-            <button className="fchat-close" onClick={() => setOpen(false)} aria-label="Tutup">
-              ✕
-            </button>
+            <div className="fchat-header-actions">
+              <button className="fchat-restart" onClick={handleRestart} title="Mulai ulang percakapan" aria-label="Restart">↻</button>
+              <button className="fchat-close" onClick={() => setOpen(false)} aria-label="Tutup">✕</button>
+            </div>
           </div>
 
           <div className="fchat-messages">
-            {messages.length === 0 && (
-              <div className="fchat-welcome">
-                <div className="fchat-welcome-icon">👋</div>
-                <h4>Halo {user.name}!</h4>
-                <p>
-                  Ada yang bisa kami bantu? Tulis pertanyaan, keluhan, atau permintaan khusus —
-                  admin akan segera membalas.
-                </p>
+            {messages.map((msg, idx) => (
+              <div key={msg.id} className={`fchat-row ${msg.sender}`}>
+                <div className={`fchat-bubble ${msg.sender === "user" ? "me" : "other"}`}>
+                  {msg.sender === "bot" && <span className="fchat-sender">🤖 RoomlyBot</span>}
+                  <p>{renderText(msg.text)}</p>
+                </div>
+                {msg.sender === "bot" && idx === lastBotIdx && msg.quickReplies && !typing && (
+                  <div className="fchat-quick-replies">
+                    {msg.quickReplies.map((qr, k) => (
+                      <button key={k} className="fchat-chip" onClick={() => handleQuickReply(qr)}>
+                        {qr.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {typing && (
+              <div className="fchat-row bot">
+                <div className="fchat-bubble other fchat-typing">
+                  <span /><span /><span />
+                </div>
               </div>
             )}
-            {messages.map((msg) => {
-              const isMe = msg.senderId === user.id;
-              return (
-                <div key={msg.id} className={`fchat-bubble ${isMe ? "me" : "other"}`}>
-                  {!isMe && (
-                    <span className="fchat-sender">
-                      🛡️ {msg.senderName}
-                    </span>
-                  )}
-                  {msg.image && (
-                    <img
-                      src={msg.image}
-                      alt="foto"
-                      onClick={() => setViewImage(msg.image)}
-                    />
-                  )}
-                  {msg.text && <p>{msg.text}</p>}
-                  <span className="fchat-time">{formatDateTime(msg.createdAt)}</span>
-                </div>
-              );
-            })}
             <div ref={endRef} />
           </div>
 
-          {imagePreview && (
-            <div className="fchat-preview">
-              <img src={imagePreview} alt="preview" />
-              <button onClick={clearImage} aria-label="Hapus foto">✕</button>
-            </div>
-          )}
-
-          <form className="fchat-input" onSubmit={handleSend}>
-            <button
-              type="button"
-              className="fchat-photo"
-              onClick={() => fileRef.current?.click()}
-              aria-label="Kirim foto"
-            >
-              📷
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleImageSelect}
-            />
+          <form
+            className="fchat-input"
+            onSubmit={(e) => { e.preventDefault(); send(input); }}
+          >
             <input
               type="text"
-              placeholder="Ketik pesan..."
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              disabled={sending}
+              placeholder="Ketik pesan ke RoomlyBot..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={typing}
             />
-            <button
-              type="submit"
-              className="fchat-send"
-              disabled={sending || (!text.trim() && !imageBase64)}
-              aria-label="Kirim"
-            >
+            <button type="submit" className="fchat-send" disabled={typing || !input.trim()} aria-label="Kirim">
               ➤
             </button>
           </form>
-        </div>
-      )}
-
-      {viewImage && (
-        <div className="fchat-lightbox" onClick={() => setViewImage(null)}>
-          <img src={viewImage} alt="full" />
         </div>
       )}
     </>

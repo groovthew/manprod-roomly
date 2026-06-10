@@ -65,10 +65,14 @@ export default function ServiceCarousel({ services, selectedId, onSelect }) {
                   />
                 )}
                 <div className="slide-icon">{service.icon}</div>
+                {service.tag && <div className="slide-tag">{service.tag}</div>}
                 {selected && <div className="slide-check">✓ Dipilih</div>}
               </div>
               <div className="slide-body">
                 <h3>{service.name}</h3>
+                {service.bestFor && (
+                  <span className="slide-bestfor">👍 Cocok untuk: {service.bestFor}</span>
+                )}
                 {service.description && <p className="slide-desc">{service.description}</p>}
                 <div className="slide-meta">
                   <span className="slide-duration">⏱ {service.duration}</span>
